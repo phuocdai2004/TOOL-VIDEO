@@ -1,0 +1,18 @@
+fastapi>=0.100.0,<1.0.0
+uvicorn>=0.23.0,<1.0.0
+websockets>=12.0,<14.0
+requests>=2.28.0,<3.0.0
+pydantic>=2.0.0,<3.0.0
+PyYAML>=6.0,<7.0
+moviepy>=2.0.0,<3.0.0
+tenacity>=8.0.0,<10.0.0
+python-multipart>=0.0.6,<1.0.0
+
+# v2.0 added
+edge_tts>=6.1.0,<8.0.0          # Azure Edge TTS, free without API Key
+srt>=3.5.0,<4.0.0               # SRT subtitle parser/generator
+
+# Static ffmpeg binary, used when system ffmpeg is not installed.
+# This explicit dependency allows npm and Docker to obtain ffmpeg automatically.
+# Without it, relying on moviepy's transitive dependency can be fragile.
+imageio-ffmpeg>=0.2.0,<1.0.0
