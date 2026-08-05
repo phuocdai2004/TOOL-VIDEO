@@ -8,7 +8,7 @@
 
 **这个项目有一个在线网站**，你不需要装任何东西就能直接用：
 
-👉 **[https://video.lichuanyang.top](https://video.lichuanyang.top)**
+👉 **[https://github.com/phuocdai2004/TOOL-VIDEO](https://github.com/phuocdai2004/TOOL-VIDEO)**
 
 打开浏览器，输入一段文字描述（比如「一只猫在花园里追蝴蝶」），点一下按钮，就可以生成 AI 视频。完全免费，不需要注册付费，不需要高端电脑。
 
@@ -178,7 +178,7 @@ sudo apt install ffmpeg
 打开终端，输入以下命令：
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 ```
 
 这行命令的意思是「从 GitHub 把这个项目的代码复制到你的电脑上」。执行后，你当前所在的文件夹里会多出一个 `agnes-video-generator` 文件夹。
@@ -222,14 +222,14 @@ python -m venv .venv
 如果你的电脑已经有 **Node.js 18+** 和 **Python 3.10+**，这是最简单的方式——不需要下载代码，不需要手动创建虚拟环境：
 
 ```bash
-npx free-short-video
+npx tool-video
 ```
 
 这一行命令会自动完成所有事情：创建虚拟环境、安装依赖、内置 ffmpeg（不需要你单独装）、启动服务。第一次运行需要下载一些东西，等几分钟就好。
 
 如果想把 API Key 也一起传入：
 ```bash
-AGNES_API_KEY=你的key npx free-short-video
+AGNES_API_KEY=你的key npx tool-video
 ```
 
 **怎么检查有没有 Node.js？** 终端输入 `node --version`。如果提示找不到，去 [https://nodejs.org](https://nodejs.org) 下载安装（选 LTS 版本，点左边绿色的大按钮）。
@@ -251,7 +251,7 @@ docker run -d -p 8765:8765 \
   -e AGNES_API_KEY=你的key \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  ghcr.io/lcy362/free-short-video:latest
+  ghcr.io/phuocdai2004/tool-video:latest
 ```
 
 > 注意：命令末尾的 `\` 表示「这行没完，下面继续」，在 Windows PowerShell 中请把 `\` 换成 `` ` ``（反引号），或者把所有内容写成一行（去掉 `\` 和换行）。
@@ -266,7 +266,7 @@ docker run -d -p 8765:8765 \
 
 再次提醒——如果你只是想体验一下，不需要本地部署：
 
-👉 **[https://video.lichuanyang.top](https://video.lichuanyang.top)**
+👉 **[https://github.com/phuocdai2004/TOOL-VIDEO](https://github.com/phuocdai2004/TOOL-VIDEO)**
 
 打开就能用，支持「简单视频」模式，输入文字就能生成 AI 视频。
 
@@ -332,7 +332,7 @@ AGNES_API_KEY=你的key ./start.sh
 
 ### Q: 我想让局域网内其他设备也能访问
 **A:** 启动时这样：
-- npm 方式：`npx free-short-video --host 0.0.0.0`
+- npm 方式：`npx tool-video --host 0.0.0.0`
 - 手动方式：`HOST=0.0.0.0 .venv/bin/python server.py`
 - 然后在其他设备的浏览器输入 `http://<你电脑的IP>:8765`
 
@@ -353,6 +353,6 @@ AGNES_API_KEY=你的key ./start.sh
 
 开源社区有一个很大的问题：大多数教程默认读者已经「懂了那些没人教过的基础知识」。这不是你的问题，是教程的问题。希望这份指南帮你跨过了那道隐形的门槛。
 
-如果还有问题，去项目的 [GitHub Issues](https://github.com/lcy362/agnes-video-generator/issues) 提问——怕英文不好就用中文写，开发者看得懂。
+如果还有问题，去项目的 [GitHub Issues](https://github.com/phuocdai2004/TOOL-VIDEO/issues) 提问——怕英文不好就用中文写，开发者看得懂。
 
 Good luck, and have fun creating videos! 🎬

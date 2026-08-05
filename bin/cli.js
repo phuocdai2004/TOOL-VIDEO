@@ -2,7 +2,7 @@
 'use strict';
 
 /*
- * free-short-video — npm launcher
+ * tool-video — npm launcher
  *
  * Installs/runs the full Agnes Video Generator (Python/FastAPI) service on the
  * user's machine with zero manual setup beyond a Python 3.10+ interpreter:
@@ -22,10 +22,10 @@ const os = require('os');
 const PKG_ROOT = path.resolve(__dirname, '..');
 
 function printHelp() {
-  console.log(`free-short-video — free AI short-video generator
+  console.log(`tool-video — free AI short-video generator
 
 Usage:
-  npx free-short-video [options]
+  npx tool-video [options]
   fsv [options]
 
 Options:
@@ -96,7 +96,7 @@ function venvBin(name) {
 
 // ── 1. python check ───────────────────────────────────────────────────────
 console.log('================================================');
-console.log('  free-short-video');
+console.log('  tool-video');
 console.log('================================================');
 console.log('');
 

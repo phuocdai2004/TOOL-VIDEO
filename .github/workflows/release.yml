@@ -12,7 +12,7 @@ permissions:
   packages: write      # 推送 GHCR
 
 env:
-  IMAGE_NAME: free-short-video
+  IMAGE_NAME: tool-video
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
 jobs:
@@ -28,12 +28,12 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           echo "Bumping project files to version $VERSION"
           # 更新 docker-compose.yml 中的镜像 tag
-          sed -i "s|free-short-video:[0-9.]*$|free-short-video:${VERSION}|g" docker-compose.yml
-          sed -i "s|free-short-video:[0-9.]*|free-short-video:${VERSION}|" docker-compose.yml
+          sed -i "s|tool-video:[0-9.]*$|tool-video:${VERSION}|g" docker-compose.yml
+          sed -i "s|tool-video:[0-9.]*|tool-video:${VERSION}|" docker-compose.yml
           # 更新 AGENTS.md 中的示例版本号（仅文档示例，保持最新）
           sed -i "s|v[0-9]\+\.[0-9]\+\.[0-9]\+ →|v${VERSION} →|g" AGENTS.md
           echo "Updated files:"
-          grep -n "free-short-video:[0-9]" docker-compose.yml || true
+          grep -n "tool-video:[0-9]" docker-compose.yml || true
           grep -n "v[0-9]" AGENTS.md | head -5 || true
 
       - name: Set up QEMU（多架构模拟）
@@ -197,17 +197,17 @@ jobs:
 
             ```bash
             # Quick run (no install):
-            npx free-short-video
+            npx tool-video
 
             # Global install:
-            npm install -g free-short-video
-            free-short-video
+            npm install -g tool-video
+            tool-video
             ```
 
             > Requires Python 3.10+ and ffmpeg on your system.
             > On first run, a Python virtual environment is auto-created and dependencies are installed.
 
-  # ── npm 包发布（整个项目 = free-short-video）──
+  # ── npm 包发布（整个项目 = tool-video）──
   # 与 Docker 镜像同由 v* 标签触发；未配置 NPM_TOKEN 时自动跳过，不影响 Docker 发布。
   # 发布的是仓库根目录的 package.json（files 白名单包含全部 Python 源码 + 字体），
   # 即把整个 Agnes Video Generator 服务作为 npm 包发出，用户 npx 即可本地起服务。
@@ -233,7 +233,7 @@ jobs:
       - name: Prepare npm README (add Quick Start at top)
         run: |
           cp README.md /tmp/README.orig.md
-          printf '## Quick Start (npm)\n\n```bash\nnpx free-short-video\n```\n\nOr install globally:\n\n```bash\nnpm install -g free-short-video\nfree-short-video\n```\n\n> Requires Python 3.10+ and ffmpeg.\n\n' > /tmp/npm-header.md
+          printf '## Quick Start (npm)\n\n```bash\nnpx tool-video\n```\n\nOr install globally:\n\n```bash\nnpm install -g tool-video\ntool-video\n```\n\n> Requires Python 3.10+ and ffmpeg.\n\n' > /tmp/npm-header.md
           cat /tmp/npm-header.md /tmp/README.orig.md > README.md
 
       - name: Publish to npm

@@ -1,9 +1,9 @@
 {
-  "name": "free-short-video",
+  "name": "tool-video",
   "version": "0.0.0",
-  "description": "Free AI short-video generator — run the full free-short-video service locally with one command. Text-to-video, image generation, Edge-TTS narration, subtitles, and compositing, all free.",
+  "description": "Free AI short-video generator — run the full tool-video service locally with one command. Text-to-video, image generation, Edge-TTS narration, subtitles, and compositing, all free.",
   "bin": {
-    "free-short-video": "bin/cli.js",
+    "tool-video": "bin/cli.js",
     "fsv": "bin/cli.js"
   },
   "engines": {
@@ -27,10 +27,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lcy362/agnes-video-generator.git"
+    "url": "git+https://github.com/phuocdai2004/TOOL-VIDEO.git"
   },
-  "homepage": "https://github.com/lcy362/agnes-video-generator#readme",
+  "homepage": "https://github.com/phuocdai2004/TOOL-VIDEO#readme",
   "bugs": {
-    "url": "https://github.com/lcy362/agnes-video-generator/issues"
+    "url": "https://github.com/phuocdai2004/TOOL-VIDEO/issues"
   }
 }

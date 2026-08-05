@@ -31,7 +31,7 @@ ffmpeg -version
 
 ```bash
 # 克隆项目（如尚未克隆）
-git clone https://github.com/your-org/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 
 # 一键启动（自动创建 venv、安装依赖、启动服务）
@@ -191,14 +191,14 @@ docker run -d -p 8765:8765 \
   -e AGNES_API_KEY="your-api-key" \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  ghcr.io/lcy362/free-short-video:latest
+  ghcr.io/phuocdai2004/tool-video:latest
 
 # Docker Hub
 docker run -d -p 8765:8765 \
   -e AGNES_API_KEY="your-api-key" \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  lcy362/free-short-video:latest
+  phuocdai2004/tool-video:latest
 ```
 
 **数据持久化**：容器内 `/app/.working_dir`（视频/上传产物）和 `/app/.agnes_config`（API Key 等设置）需挂载到本机，否则容器重建后数据丢失。挂载后生成的视频直接在 `~/agnes-data/working/` 可拷出。
@@ -206,7 +206,7 @@ docker run -d -p 8765:8765 \
 也可用项目自带 `docker-compose.yml`：
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 AGNES_API_KEY="your-api-key" docker compose up -d
 ```
@@ -218,15 +218,15 @@ Docker 镜像已声明 `VOLUME`，纯 `docker run -p 8765:8765 <镜像>` 会将�
 ### 0.7 Docker 镜像发布流程
 
 > **分发渠道说明**：本项目**官方分发 = 本仓库的 GitHub Release**，包含两路产出，均由 `.github/workflows/release.yml` 在打 `v*` 标签时自动发布：
-> 1. **Docker 镜像**（多架构）— GHCR `ghcr.io/lcy362/free-short-video` + 可选 Docker Hub `lcy362/free-short-video`。
-> 2. **npm 包 `free-short-video`** — **整个项目本身就是这个 npm 包**：仓库根 `package.json` 的 `files` 白名单包含全部 Python 源码 + 字体，由 `npm-publish` job 直接发布到 npm registry。用户 `npx free-short-video`（或 `fsv`）即可在本地自动建 venv、装依赖、起服务并打开浏览器（需本机 Python 3.10+，无需系统 ffmpeg）。需仓库 Secrets 配置 `NPM_TOKEN`；未配置时该 job 自动跳过，不影响 Docker 发布。
+> 1. **Docker 镜像**（多架构）— GHCR `ghcr.io/phuocdai2004/tool-video` + 可选 Docker Hub `phuocdai2004/tool-video`。
+> 2. **npm 包 `tool-video`** — **整个项目本身就是这个 npm 包**：仓库根 `package.json` 的 `files` 白名单包含全部 Python 源码 + 字体，由 `npm-publish` job 直接发布到 npm registry。用户 `npx tool-video`（或 `fsv`）即可在本地自动建 venv、装依赖、起服务并打开浏览器（需本机 Python 3.10+，无需系统 ffmpeg）。需仓库 Secrets 配置 `NPM_TOKEN`；未配置时该 job 自动跳过，不影响 Docker 发布。
 > 两路共用同一语义化版本标签（如 `v5.2.0` → Docker tag `5.2.0` / npm 版本 `5.2.0`）。
 
 每次推送 `v*` 标签（如 `v5.2.0`）时，CI（`.github/workflows/release.yml`）自动执行：
 
 1. **冒烟测试** — 本地构建 `linux/amd64` 镜像，启动容器验证 `GET /` 返回 200
-2. **GHCR** — `docker/metadata-action` 生成 OCI labels + semver tags（`5.2.0`/`5.2`/`latest`），GITHUB_TOKEN 推送至 `ghcr.io/lcy362/free-short-video`，自动关联到仓库
-3. **Docker Hub** — 同步推送至 `lcy362/free-short-video`（tag `v5.2.0` + `latest`），`.github/scripts/update_dockerhub_overview.py` 同步仓库描述与 README 概述
+2. **GHCR** — `docker/metadata-action` 生成 OCI labels + semver tags（`5.2.0`/`5.2`/`latest`），GITHUB_TOKEN 推送至 `ghcr.io/phuocdai2004/tool-video`，自动关联到仓库
+3. **Docker Hub** — 同步推送至 `phuocdai2004/tool-video`（tag `v5.2.0` + `latest`），`.github/scripts/update_dockerhub_overview.py` 同步仓库描述与 README 概述
 4. **GitHub Release** — 生成 Release 页，附双语拉取命令与持久化启动说明
 
 **手动触发**：在 GitHub Actions → Release Docker Image → Run workflow。
@@ -242,7 +242,7 @@ Docker 镜像已声明 `VOLUME`，纯 `docker run -p 8765:8765 <镜像>` 会将�
 | 字幕中文显示为方块 | CJK 字体缺失 | 检查 `resource/fonts/STHeitiMedium.ttc` 是否存在 |
 | TTS 无声音 | edge_tts 版本过低 | `.venv/bin/pip install 'edge_tts>=6.1.0'` |
 | Docker 容器重建后数据丢失 | 未挂载工作目录 | 启动时加 `-v ~/agnes-data/working:/app/.working_dir -v ~/agnes-data/config:/app/.agnes_config` |
-| `docker pull` GHCR 401 | 包为私有 | 仓库 Settings → Packages → free-short-video → Change visibility → Public |
+| `docker pull` GHCR 401 | 包为私有 | 仓库 Settings → Packages → tool-video → Change visibility → Public |
 
 ---
 

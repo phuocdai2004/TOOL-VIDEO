@@ -1,35 +1,35 @@
 # 🎬 Agnes Video Generator — 完全免费的 AI 视频生成工具
 
 [![English](https://img.shields.io/badge/EN-English-blue)](/README.md)
-[![GitHub Stars](https://img.shields.io/github/stars/lcy362/agnes-video-generator?style=social)](https://github.com/lcy362/agnes-video-generator)
-[![License](https://img.shields.io/github/license/lcy362/agnes-video-generator)](https://github.com/lcy362/agnes-video-generator/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/phuocdai2004/TOOL-VIDEO?style=social)](https://github.com/phuocdai2004/TOOL-VIDEO)
+[![License](https://img.shields.io/github/license/phuocdai2004/TOOL-VIDEO)](https://github.com/phuocdai2004/TOOL-VIDEO/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue)](https://www.python.org/)
-[![Website](https://img.shields.io/badge/website-video.lichuanyang.top-8A2BE2)](https://video.lichuanyang.top)
-[![Docker Hub](https://img.shields.io/docker/pulls/lcy362/free-short-video?label=docker%20pulls)](https://hub.docker.com/r/lcy362/free-short-video)
-[![npm](https://img.shields.io/npm/v/free-short-video?label=npm)](https://www.npmjs.com/package/free-short-video)
+[![Website](https://img.shields.io/badge/website-github.com/phuocdai2004/TOOL-VIDEO-8A2BE2)](https://github.com/phuocdai2004/TOOL-VIDEO)
+[![Docker Hub](https://img.shields.io/docker/pulls/phuocdai2004/tool-video?label=docker%20pulls)](https://hub.docker.com/r/phuocdai2004/tool-video)
+[![npm](https://img.shields.io/npm/v/tool-video?label=npm)](https://www.npmjs.com/package/tool-video)
 
-> **完全免费的 AI 视频生成工具** — 基于 Agnes AI 免费模型，无需订阅、无需高端显卡、没有用量限制。输入一段文字创意，就能自动生成带旁白配音和字幕的多场景 AI 视频。支持文生视频、图生视频、关键帧动画、数字人口播等多种模式，所有 AI 计算在云端完成，普通笔记本就能跑。**[在线体验 →](https://video.lichuanyang.top)**
+> **完全免费的 AI 视频生成工具** — 基于 Agnes AI 免费模型，无需订阅、无需高端显卡、没有用量限制。输入一段文字创意，就能自动生成带旁白配音和字幕的多场景 AI 视频。支持文生视频、图生视频、关键帧动画、数字人口播等多种模式，所有 AI 计算在云端完成，普通笔记本就能跑。**[在线体验 →](https://github.com/phuocdai2004/TOOL-VIDEO)**
 
 > "解决的办法不是压制 AI，而是让它变成一种更平权的能力，让每个人都知道如何借 AI 创造更多。这也是我们公司很重要的愿景，让世界级的 AI 属于每一个人。我们能做的可能微不足道，但这个愿景非常长久、持久。"
 >
 > —— Bruce Yang，Agnes AI 创始人
 
-**[🌐 官网](https://video.lichuanyang.top)** | **[📝 博客文章（中文）](https://lichuanyang.top/posts/22470/)** | **[📝 Blog (English)](https://lichuanyang.top/en/posts/22470/)**
+**[🌐 官网](https://github.com/phuocdai2004/TOOL-VIDEO)** | **[📝 博客文章（中文）](https://github.com/phuocdai2004/TOOL-VIDEO)** | **[📝 Blog (English)](https://github.com/phuocdai2004/TOOL-VIDEO)**
 
-> **🖥️ 在线体验 — 免安装：** 打开 [video.lichuanyang.top](https://video.lichuanyang.top) 即可在浏览器中使用 **简单视频** 模式。输入提示词，立刻生成免费的 AI 视频。
+> **🖥️ 在线体验 — 免安装：** 打开 [github.com/phuocdai2004/TOOL-VIDEO](https://github.com/phuocdai2004/TOOL-VIDEO) 即可在浏览器中使用 **简单视频** 模式。输入提示词，立刻生成免费的 AI 视频。
 
 ## 🚀 两种使用方式 — 均完全免费
 
 | 项目 | 运行方式 | 功能定位 | 链接 |
 |------|---------|---------|------|
-| **[Agnes Video Generator](https://github.com/lcy362/agnes-video-generator)**（本项目） | **下载后本地运行** | **功能更强大** —— TTS 配音、自动字幕、数字人、图生视频、关键帧动画、文章成片、断点续传等 | [GitHub](https://github.com/lcy362/agnes-video-generator) |
-| **[FreeShortVideoStudio](https://github.com/lcy362/free-short-video-studio)** | **完全在线，浏览器内运行** | 轻量免安装、零配置，**功能建设中** | [video.lichuanyang.top/studio](https://video.lichuanyang.top/studio) · [GitHub](https://github.com/lcy362/free-short-video-studio) |
+| **[Agnes Video Generator](https://github.com/phuocdai2004/TOOL-VIDEO)**（本项目） | **下载后本地运行** | **功能更强大** —— TTS 配音、自动字幕、数字人、图生视频、关键帧动画、文章成片、断点续传等 | [GitHub](https://github.com/phuocdai2004/TOOL-VIDEO) |
+| **[ToolVideoStudio](https://github.com/phuocdai2004/tool-video-studio)** | **完全在线，浏览器内运行** | 轻量免安装、零配置，**功能建设中** | [github.com/phuocdai2004/TOOL-VIDEO/studio](https://github.com/phuocdai2004/TOOL-VIDEO/studio) · [GitHub](https://github.com/phuocdai2004/tool-video-studio) |
 
 ## ⭐ 支持与贡献
 
-如果你觉得这个项目有用，请给 **[GitHub 仓库](https://github.com/lcy362/agnes-video-generator)点个 Star** ⭐ —— 你的支持能让更多人发现这个免费开源的 AI 视频生成工具。
+如果你觉得这个项目有用，请给 **[GitHub 仓库](https://github.com/phuocdai2004/TOOL-VIDEO)点个 Star** ⭐ —— 你的支持能让更多人发现这个免费开源的 AI 视频生成工具。
 
-欢迎通过 [GitHub Issues](https://github.com/lcy362/agnes-video-generator/issues) 提交问题反馈或功能建议。
+欢迎通过 [GitHub Issues](https://github.com/phuocdai2004/TOOL-VIDEO/issues) 提交问题反馈或功能建议。
 
 ### 💝 支持开发者
 
@@ -37,8 +37,8 @@ Agnes Video Generator 完全免费且开源，**本项目绝不会提供付费�
 
 如果你觉得这个项目对你有帮助，可以通过以下方式支持它持续发展：
 
-- **⭐ 在 GitHub 上点 Star** — 给[仓库](https://github.com/lcy362/agnes-video-generator)点个 Star，帮助更多人发现这个项目。
-- **🌐 在官网关闭去广告插件** — 在 [video.lichuanyang.top](https://video.lichuanyang.top) 上关闭 AdBlock 等去广告工具，看到感兴趣的广告可以点一下。举手之劳，却是实实在在的支持。
+- **⭐ 在 GitHub 上点 Star** — 给[仓库](https://github.com/phuocdai2004/TOOL-VIDEO)点个 Star，帮助更多人发现这个项目。
+- **🌐 在官网关闭去广告插件** — 在 [github.com/phuocdai2004/TOOL-VIDEO](https://github.com/phuocdai2004/TOOL-VIDEO) 上关闭 AdBlock 等去广告工具，看到感兴趣的广告可以点一下。举手之劳，却是实实在在的支持。
 - **📢 分享你的创作** — 将你用 Agnes Video Generator 生成的视频发布到社交媒体（抖音、YouTube、小红书等）并标注本项目。让更多人知道这个工具，更多的用户意味着更多的反馈，项目也会变得更好。
 
 ## 🎥 Demo
@@ -93,7 +93,7 @@ Agnes Video Generator 完全免费且开源，**本项目绝不会提供付费�
 ## 📚 文档导航
 
 - **[核心功能](docs/features.zh.md)** — 多种创作模式、完全免费的 AI 模型链、AI 旁白配音与智能字幕、灵活的创作控制、生产级可靠性与多语言 Web UI。
-- **[快速开始](docs/getting-started.zh.md)** — 4 种部署方式：手动（`start.sh`）、Docker、npm（`npx free-short-video`）、AI Agent 辅助。
+- **[快速开始](docs/getting-started.zh.md)** — 4 种部署方式：手动（`start.sh`）、Docker、npm（`npx tool-video`）、AI Agent 辅助。
 - **[使用说明](docs/usage.zh.md)** — 配置 API Key、选择视频模式、断点续传、三种串联模式，以及日志与输出目录。
 - **[项目架构](docs/architecture.zh.md)** — 项目结构与技术栈。
 - **[API 接口](docs/api.zh.md)** — 完整 REST + WebSocket 接口列表。

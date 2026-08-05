@@ -11,7 +11,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-IMAGE="${AGNES_IMAGE:-ghcr.io/lcy362/agnes-video-generator/free-short-video:4.7.2}"
+IMAGE="${AGNES_IMAGE:-ghcr.io/phuocdai2004/tool-video:4.7.2}"
 NAME="agnes-video"
 PORT="${AGNES_PORT:-8765}"
 DATA_DIR="$(pwd)/agnes_data"

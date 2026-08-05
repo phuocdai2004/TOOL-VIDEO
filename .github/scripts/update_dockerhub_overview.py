@@ -6,7 +6,7 @@ Expected environment variables:
   DH_USER    Docker Hub username
   DH_TOKEN   Docker Hub token (PAT works as the login password)
   REPO_DESC  GitHub repository description (short overview)
-  IMAGE_NAME image/repository name on Docker Hub (defaults to free-short-video)
+  IMAGE_NAME image/repository name on Docker Hub (defaults to tool-video)
 """
 import os
 import sys
@@ -24,11 +24,11 @@ def main() -> int:
     # Docker Hub caps the short `description` at 100 bytes. Exceeding it
     # rejects the ENTIRE PATCH (including full_description), so we keep this
     # concise and defensively truncate on a character boundary just in case.
-    desc = "free-short-video — Self-hosted AI video generator with subtitles"
+    desc = "tool-video — Self-hosted AI video generator with subtitles"
     while len(desc.encode("utf-8")) > 100:
         desc = desc[:-1]
 
-    image = os.environ.get("IMAGE_NAME", "free-short-video")
+    image = os.environ.get("IMAGE_NAME", "tool-video")
     repo_path = f"{user}/{image}"
 
     # Use the repository README as the full description.
@@ -47,7 +47,7 @@ def main() -> int:
     readme_lines = readme.split("\n")
     for i, line in enumerate(readme_lines):
         if line.startswith("# ") and "Agnes Video Generator" in line:
-            readme_lines[i] = line.replace("Agnes Video Generator", "free-short-video", 1)
+            readme_lines[i] = line.replace("Agnes Video Generator", "tool-video", 1)
             break
     # Prepend Docker Quick Start at the very beginning of the page, after the H1.
     docker_usage = (
@@ -57,7 +57,7 @@ def main() -> int:
         "docker run -d -p 8765:8765 \\\n"
         "  -e AGNES_API_KEY=<your-key> \\\n"
         "  -v ~/agnes-data/working:/app/.working_dir \\\n"
-        "  lcy362/free-short-video:latest\n"
+        "  phuocdai2004/tool-video:latest\n"
         "```\n\n"
         "Then open **http://localhost:8765**.\n\n"
         "---\n"
@@ -70,7 +70,7 @@ def main() -> int:
     if len(readme) > limit:
         cut = readme.rfind("\n", 0, limit)
         readme = (readme[:cut] if cut > 0 else readme[:limit]) + \
-            "\n\n---\nFull README: https://github.com/lcy362/agnes-video-generator"
+            "\n\n---\nFull README: https://github.com/phuocdai2004/TOOL-VIDEO"
 
     # 1) Log in to obtain a JWT (the Hub API accepts a PAT as the password).
     try:

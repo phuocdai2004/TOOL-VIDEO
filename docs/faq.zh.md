@@ -26,7 +26,7 @@
 
 ### 可以用 Docker 部署吗？
 
-可以。预构建镜像已推送至 [GHCR](https://github.com/lcy362/agnes-video-generator/pkgs/container/free-short-video) 和 [Docker Hub](https://hub.docker.com/r/lcy362/free-short-video)。拉取 `latest` 标签后直接运行，无需安装 Python 或 ffmpeg。详见快速开始中的 **[方式 B：Docker 部署](../docs/getting-started.zh.md#方式-bdocker-部署无需安装-pythonffmpeg)**。
+可以。预构建镜像已推送至 [GHCR](https://github.com/phuocdai2004/TOOL-VIDEO/pkgs/container/tool-video) 和 [Docker Hub](https://hub.docker.com/r/phuocdai2004/tool-video)。拉取 `latest` 标签后直接运行，无需安装 Python 或 ffmpeg。详见快速开始中的 **[方式 B：Docker 部署](../docs/getting-started.zh.md#方式-bdocker-部署无需安装-pythonffmpeg)**。
 
 ### 可以部署在自己的服务器上吗？
 
@@ -34,4 +34,4 @@
 
 ### 如何获取帮助或报告问题？
 
-请访问 [GitHub Issues](https://github.com/lcy362/agnes-video-generator/issues) 页面查看已有报告或提交新 Issue。项目还包含完整的 `AGENTS.md` 部署指引，支持 AI 编程助手辅助调试。
+请访问 [GitHub Issues](https://github.com/phuocdai2004/TOOL-VIDEO/issues) 页面查看已有报告或提交新 Issue。项目还包含完整的 `AGENTS.md` 部署指引，支持 AI 编程助手辅助调试。

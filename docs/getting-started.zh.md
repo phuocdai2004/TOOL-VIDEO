@@ -14,7 +14,7 @@
 **第一步 — 克隆 & 启动**
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 ./start.sh
 ```
@@ -57,14 +57,14 @@ docker run -d -p 8765:8765 \
   -e AGNES_API_KEY=<你的key> \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  ghcr.io/lcy362/free-short-video:latest
+  ghcr.io/phuocdai2004/tool-video:latest
 
 # Docker Hub
 docker run -d -p 8765:8765 \
   -e AGNES_API_KEY=<你的key> \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  lcy362/free-short-video:latest
+  phuocdai2004/tool-video:latest
 ```
 
 然后打开 `http://localhost:8765`。
@@ -74,7 +74,7 @@ docker run -d -p 8765:8765 \
 也可以用项目自带的 `docker-compose.yml` 一键启动：
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 AGNES_API_KEY=<你的key> docker compose up -d
 ```
@@ -85,17 +85,17 @@ AGNES_API_KEY=<你的key> docker compose up -d
 
 ```bash
 # 直接运行，无需安装
-npx free-short-video
+npx tool-video
 
 # 或全局安装后运行
-npm install -g free-short-video
-free-short-video          # 简写别名：fsv
+npm install -g tool-video
+tool-video          # 简写别名：fsv
 ```
 
 首次运行时，启动器会自动创建本地虚拟环境、安装 Python 依赖、接入**内置的 ffmpeg**（`imageio-ffmpeg` 提供的静态二进制，现已在 `requirements.txt` 中显式声明，因此无需在系统中安装 ffmpeg），在 `http://localhost:8765` 启动服务并打开浏览器。可通过环境变量传入 Key，或稍后在 Web UI 中设置：
 
 ```bash
-AGNES_API_KEY=<你的key> npx free-short-video
+AGNES_API_KEY=<你的key> npx tool-video
 ```
 
 可用参数：`--port <n>`、`--host <h>`（用 `0.0.0.0` 允许局域网访问）、`--no-open`。
@@ -141,7 +141,7 @@ ffmpeg -version
 本项目专为 AI 编程助手友好设计。先由你下载代码并准备好 API Key：
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 ```
 

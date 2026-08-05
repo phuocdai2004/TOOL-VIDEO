@@ -26,7 +26,7 @@ The Web UI supports 13 languages: 中文, English, Deutsch, Français, Nederland
 
 ### Can I run this with Docker?
 
-Yes. Pre-built images are published to both [GHCR](https://github.com/lcy362/agnes-video-generator/pkgs/container/free-short-video) and [Docker Hub](https://hub.docker.com/r/lcy362/free-short-video). Just pull the `latest` tag and run — no Python or ffmpeg installation needed. See **[Option B: Docker](../docs/getting-started.md#option-b-docker-no-pythonffmpeg-required)** in Getting Started for the full command and volume mount instructions.
+Yes. Pre-built images are published to both [GHCR](https://github.com/phuocdai2004/TOOL-VIDEO/pkgs/container/tool-video) and [Docker Hub](https://hub.docker.com/r/phuocdai2004/tool-video). Just pull the `latest` tag and run — no Python or ffmpeg installation needed. See **[Option B: Docker](../docs/getting-started.md#option-b-docker-no-pythonffmpeg-required)** in Getting Started for the full command and volume mount instructions.
 
 ### Can I host this on my own server?
 
@@ -34,4 +34,4 @@ Absolutely. The project is designed for self-hosting. Just clone the repo, run `
 
 ### How do I get help or report issues?
 
-Check the [GitHub Issues](https://github.com/lcy362/agnes-video-generator/issues) page for existing reports or open a new one. The project also includes a comprehensive `AGENTS.md` for AI-agent-assisted debugging. For feature requests, bug reports, or questions, the Issues page is the best place.
+Check the [GitHub Issues](https://github.com/phuocdai2004/TOOL-VIDEO/issues) page for existing reports or open a new one. The project also includes a comprehensive `AGENTS.md` for AI-agent-assisted debugging. For feature requests, bug reports, or questions, the Issues page is the best place.

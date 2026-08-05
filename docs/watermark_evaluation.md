@@ -1,7 +1,7 @@
 # 视频水印方案评估
 
 > **日期**：2026-06-30
-> **需求**：在生成的所有视频上添加水印 —「由 Agnes Video Generator 生成」+ 官网地址 `video.lichuanyang.top`
+> **需求**：在生成的所有视频上添加水印 —「由 Agnes Video Generator 生成」+ 官网地址 `github.com/phuocdai2004/TOOL-VIDEO`
 
 ---
 
@@ -27,7 +27,7 @@
 ```bash
 ffmpeg -i input.mp4 -vf \
   "drawtext=fontfile=STHeitiMedium.ttc: \
-   text='由 Agnes Video Generator 生成 | video.lichuanyang.top': \
+   text='由 Agnes Video Generator 生成 | github.com/phuocdai2004/TOOL-VIDEO': \
    fontsize=22:fontcolor=white@0.85: \
    box=1:boxcolor=black@0.35:boxborderw=8: \
    x=w-tw-24:y=h-th-16: \
@@ -178,7 +178,7 @@ core/compositor/watermark.py          ← 新增 WatermarkProcessor
 
 ### 4.6 实现要点
 
-1. **水印文本**：`由 Agnes Video Generator 生成 | video.lichuanyang.top`
+1. **水印文本**：`由 Agnes Video Generator 生成 | github.com/phuocdai2004/TOOL-VIDEO`
 2. **字体路径**：`resource/fonts/STHeitiMedium.ttc`
 3. **字号自适应**：`fontsize = max(14, int(video_height * 0.022))`
 4. **配置化**：水印文本、位置、透明度通过 `core/config.py` 管理，支持运行时关闭

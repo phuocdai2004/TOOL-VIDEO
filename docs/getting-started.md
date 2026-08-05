@@ -12,7 +12,7 @@ That's it. No GPU, no large RAM, a regular laptop is all you need.
 **Step 1 — Clone & Launch**
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 ./start.sh
 ```
@@ -55,14 +55,14 @@ docker run -d -p 8765:8765 \
   -e AGNES_API_KEY=<your-key> \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  ghcr.io/lcy362/free-short-video:latest
+  ghcr.io/phuocdai2004/tool-video:latest
 
 # Docker Hub
 docker run -d -p 8765:8765 \
   -e AGNES_API_KEY=<your-key> \
   -v ~/agnes-data/working:/app/.working_dir \
   -v ~/agnes-data/config:/app/.agnes_config \
-  lcy362/free-short-video:latest
+  phuocdai2004/tool-video:latest
 ```
 
 Then open `http://localhost:8765`.
@@ -72,7 +72,7 @@ Then open `http://localhost:8765`.
 Or use `docker compose` with the included `docker-compose.yml`:
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 AGNES_API_KEY=<your-key> docker compose up -d
 ```
@@ -83,17 +83,17 @@ If you have **Node.js 18+** and **Python 3.10+** installed, the whole service sh
 
 ```bash
 # Run directly without installing
-npx free-short-video
+npx tool-video
 
 # Or install globally, then run
-npm install -g free-short-video
-free-short-video          # short alias: fsv
+npm install -g tool-video
+tool-video          # short alias: fsv
 ```
 
 On first run the launcher automatically creates a local virtual environment, installs Python dependencies, wires up a bundled `ffmpeg` (via `imageio-ffmpeg`, so no system ffmpeg needed), starts the server on `http://localhost:8765`, and opens your browser. Pass your key through the environment or set it later in the Web UI:
 
 ```bash
-AGNES_API_KEY=<your-key> npx free-short-video
+AGNES_API_KEY=<your-key> npx tool-video
 ```
 
 Options: `--port <n>`, `--host <h>` (use `0.0.0.0` for LAN access), `--no-open`.
@@ -139,7 +139,7 @@ ffmpeg -version
 This project is designed for AI coding assistants. First, download the code and prepare your API key:
 
 ```bash
-git clone https://github.com/lcy362/agnes-video-generator.git
+git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
 ```
 

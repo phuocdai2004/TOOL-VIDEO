@@ -12,4 +12,4 @@
 ## 提交信息
 
 - **Commit**: `edd4e3f` on `v3.0-dev`
-- **Issue**: 已关闭 [#11](https://github.com/lcy362/agnes-video-generator/issues/11)
+- **Issue**: 已关闭 [#11](https://github.com/phuocdai2004/TOOL-VIDEO/issues/11)

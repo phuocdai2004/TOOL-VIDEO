@@ -1,35 +1,35 @@
 # 🎬 Agnes Video Generator — Completely Free AI Video Generator
 
 [![中文](https://img.shields.io/badge/CN-中文-red)](/README_ZH.md)
-[![GitHub Stars](https://img.shields.io/github/stars/lcy362/agnes-video-generator?style=social)](https://github.com/lcy362/agnes-video-generator)
-[![License](https://img.shields.io/github/license/lcy362/agnes-video-generator)](https://github.com/lcy362/agnes-video-generator/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/phuocdai2004/TOOL-VIDEO?style=social)](https://github.com/phuocdai2004/TOOL-VIDEO)
+[![License](https://img.shields.io/github/license/phuocdai2004/TOOL-VIDEO)](https://github.com/phuocdai2004/TOOL-VIDEO/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue)](https://www.python.org/)
-[![Website](https://img.shields.io/badge/website-video.lichuanyang.top-8A2BE2)](https://video.lichuanyang.top)
-[![Docker Hub](https://img.shields.io/docker/pulls/lcy362/free-short-video?label=docker%20pulls)](https://hub.docker.com/r/lcy362/free-short-video)
-[![npm](https://img.shields.io/npm/v/free-short-video?label=npm)](https://www.npmjs.com/package/free-short-video)
+[![Website](https://img.shields.io/badge/website-github.com/phuocdai2004/TOOL-VIDEO-8A2BE2)](https://github.com/phuocdai2004/TOOL-VIDEO)
+[![Docker Hub](https://img.shields.io/docker/pulls/phuocdai2004/tool-video?label=docker%20pulls)](https://hub.docker.com/r/phuocdai2004/tool-video)
+[![npm](https://img.shields.io/npm/v/tool-video?label=npm)](https://www.npmjs.com/package/tool-video)
 
-> **Completely free AI video generator** — Built on Agnes AI's free models, no subscription, no high-end GPU, no usage limits. Type in a text idea and automatically generate multi-scene AI videos with narration and subtitles. Supports text-to-video, image-to-video, keyframes animation, digital anchor, and more. All AI compute runs in the cloud — a regular laptop is all you need. **[Try it online →](https://video.lichuanyang.top)**
+> **Completely free AI video generator** — Built on Agnes AI's free models, no subscription, no high-end GPU, no usage limits. Type in a text idea and automatically generate multi-scene AI videos with narration and subtitles. Supports text-to-video, image-to-video, keyframes animation, digital anchor, and more. All AI compute runs in the cloud — a regular laptop is all you need. **[Try it online →](https://github.com/phuocdai2004/TOOL-VIDEO)**
 
 > "The solution is not to suppress AI, but to make it a more equitable capability, so that everyone knows how to create more with AI. This is a very important vision for our company — to make world-class AI belong to everyone. What we can do may be insignificant, but this vision is very long-term and enduring."
 >
 > — Bruce Yang, Founder of Agnes AI
 
-**[🌐 Official Website](https://video.lichuanyang.top)** | **[📝 Blog (中文)](https://lichuanyang.top/posts/22470/)** | **[📝 Blog (English)](https://lichuanyang.top/en/posts/22470/)**
+**[🌐 Official Website](https://github.com/phuocdai2004/TOOL-VIDEO)** | **[📝 Blog (中文)](https://github.com/phuocdai2004/TOOL-VIDEO)** | **[📝 Blog (English)](https://github.com/phuocdai2004/TOOL-VIDEO)**
 
-> **🖥️ Try it now — no install needed:** Visit [video.lichuanyang.top](https://video.lichuanyang.top) and experience **Simple Video** mode directly in your browser. Just enter a prompt and generate a free AI video instantly.
+> **🖥️ Try it now — no install needed:** Visit [github.com/phuocdai2004/TOOL-VIDEO](https://github.com/phuocdai2004/TOOL-VIDEO) and experience **Simple Video** mode directly in your browser. Just enter a prompt and generate a free AI video instantly.
 
 ## 🚀 Two Ways to Use — Both Completely Free
 
 | Project | Run Where | Features | Link |
 |---------|-----------|----------|------|
-| **[Agnes Video Generator](https://github.com/lcy362/agnes-video-generator)** (this project) | **Download & run locally** | **More powerful** — TTS narration, auto subtitles, digital anchor, image-to-video, keyframes animation, manuscript-to-video, checkpoint resume & more | [GitHub](https://github.com/lcy362/agnes-video-generator) |
-| **[FreeShortVideoStudio](https://github.com/lcy362/free-short-video-studio)** | **Fully online, in the browser** | Lightweight, zero install — no setup at all, **features under active construction** | [video.lichuanyang.top/studio](https://video.lichuanyang.top/studio) · [GitHub](https://github.com/lcy362/free-short-video-studio) |
+| **[Agnes Video Generator](https://github.com/phuocdai2004/TOOL-VIDEO)** (this project) | **Download & run locally** | **More powerful** — TTS narration, auto subtitles, digital anchor, image-to-video, keyframes animation, manuscript-to-video, checkpoint resume & more | [GitHub](https://github.com/phuocdai2004/TOOL-VIDEO) |
+| **[ToolVideoStudio](https://github.com/phuocdai2004/tool-video-studio)** | **Fully online, in the browser** | Lightweight, zero install — no setup at all, **features under active construction** | [github.com/phuocdai2004/TOOL-VIDEO/studio](https://github.com/phuocdai2004/TOOL-VIDEO/studio) · [GitHub](https://github.com/phuocdai2004/tool-video-studio) |
 
 ## ⭐ Support & Contribute
 
-If you find this project useful, please **star the [GitHub repository](https://github.com/lcy362/agnes-video-generator)** ⭐ — your support helps more people discover this free and open-source AI video generator.
+If you find this project useful, please **star the [GitHub repository](https://github.com/phuocdai2004/TOOL-VIDEO)** ⭐ — your support helps more people discover this free and open-source AI video generator.
 
-Bug reports and feature suggestions are welcome via [GitHub Issues](https://github.com/lcy362/agnes-video-generator/issues).
+Bug reports and feature suggestions are welcome via [GitHub Issues](https://github.com/phuocdai2004/TOOL-VIDEO/issues).
 
 ### 💝 Support the Developer
 
@@ -37,8 +37,8 @@ Agnes Video Generator is and will always remain completely free and open-source.
 
 If you find this project helpful, here are a few ways to support its continued development:
 
-- **⭐ Star on GitHub** — Star the [repository](https://github.com/lcy362/agnes-video-generator) to help others discover this project.
-- **🌐 Whitelist the official website** — Turn off your ad blocker on [video.lichuanyang.top](https://video.lichuanyang.top) and click on an ad if something catches your eye. A small gesture that makes a real difference.
+- **⭐ Star on GitHub** — Star the [repository](https://github.com/phuocdai2004/TOOL-VIDEO) to help others discover this project.
+- **🌐 Whitelist the official website** — Turn off your ad blocker on [github.com/phuocdai2004/TOOL-VIDEO](https://github.com/phuocdai2004/TOOL-VIDEO) and click on an ad if something catches your eye. A small gesture that makes a real difference.
 - **📢 Share your creations** — Post videos made with Agnes Video Generator on social media (Douyin, YouTube, Xiaohongshu, etc.) and tag the project. More exposure means more users, more feedback, and a better tool for everyone.
 
 ## 🎥 Demo
@@ -93,7 +93,7 @@ To be honest, Agnes's video model isn't perfect yet. The generated frames are so
 ## 📚 Documentation
 
 - **[Features](docs/features.md)** — Creation modes, the completely free AI model chain, AI narration & smart subtitles, flexible creative controls, production-grade reliability, and the multilingual Web UI.
-- **[Getting Started](docs/getting-started.md)** — Install and deploy in 4 ways: Manual (`start.sh`), Docker, npm (`npx free-short-video`), or AI-Agent assisted.
+- **[Getting Started](docs/getting-started.md)** — Install and deploy in 4 ways: Manual (`start.sh`), Docker, npm (`npx tool-video`), or AI-Agent assisted.
 - **[Usage Guide](docs/usage.md)** — Configure your API key, pick a video mode, resume from checkpoints, the three chaining modes, and logs & output layout.
 - **[Architecture](docs/architecture.md)** — Project structure and tech stack.
 - **[API Reference](docs/api.md)** — Full REST + WebSocket endpoint list.
