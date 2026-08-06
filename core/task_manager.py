@@ -12,6 +12,7 @@ import tempfile
 from typing import Optional
 
 from core.config import get_working_dir
+from core.auth_context import current_user_is_admin, get_current_user, get_current_user_id
 from core.path_security import safe_join, UnsafePathError
 from models.task import (
     AnyTaskState,
@@ -62,6 +63,8 @@ class TaskManager:
         self._ensure_dir()
         self._state = state
         self._state.task_id = self.task_id
+        if not self._state.owner_id:
+            self._state.owner_id = get_current_user_id()
         self._save()
         logger.info(f"[TaskManager] Created task {self.task_id}, type={self._state.task_type}")
         return self._state
@@ -83,6 +86,11 @@ class TaskManager:
             # v2.0：通过 parse_task_state 工厂函数反序列化
             # 旧数据没有 task_type，parse_task_state 会默认设为 CREATIVE
             self._state = parse_task_state(data)
+            request_user = get_current_user()
+            if request_user and not current_user_is_admin():
+                if not self._state.owner_id or self._state.owner_id != request_user.get("id"):
+                    self._state = None
+                    return None
 
             # v3.0 向后兼容：旧数据 audio_config 中含有 subtitle_style（Pydantic v2
             # extra='ignore' 会静默丢弃，所以需从原始 data 中提取），迁移为独立
@@ -199,6 +207,7 @@ class TaskManager:
                         data = json.load(f)
                     tasks.append({
                         "task_id": data.get("task_id", name),
+                        "owner_id": data.get("owner_id", ""),
                         "dir_name": name,
                         "task_type": data.get("task_type", TaskType.CREATIVE),
                         "creative_name": data.get("creative_name", ""),
@@ -207,5 +216,8 @@ class TaskManager:
                     })
                 except Exception as e:
                     logger.debug(f"[TaskManager] Failed to load task listing for {name}: {e}")
+        request_user = get_current_user()
+        if request_user and not current_user_is_admin():
+            tasks = [task for task in tasks if task.get("owner_id") == request_user.get("id")]
         tasks.sort(key=lambda t: t.get("dir_name", ""), reverse=True)
         return tasks

@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agnes Video Generator</title>
+<title>TOOL VIDEO | AI Creative Studio</title>
 <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
 <link rel="icon" type="image/png" sizes="1024x1024" href="/static/icon.png">
 <link rel="apple-touch-icon" href="/static/icon.png">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
 <style>
   /* ── Base Animations ── */
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -60,6 +61,226 @@
     border-color: rgba(59,130,246,0.5);
     box-shadow: 0 0 12px rgba(59,130,246,0.15);
     background: rgba(31,41,55,0.7);
+  }
+
+  /* ── Product Source ── */
+  .product-preview {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    margin-bottom: 16px;
+    background: rgba(7,12,18,0.78);
+    border: 1px solid rgba(34,211,238,0.18);
+    border-radius: 6px;
+  }
+  .product-preview.hidden { display: none; }
+  .product-preview.no-image { grid-template-columns: minmax(0, 1fr); }
+  .product-preview img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 5px;
+    background: #111827;
+  }
+  .product-source-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+  .product-source-divider::before,
+  .product-source-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+  .product-upload-zone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 72px;
+    padding: 13px 14px;
+    border: 1px dashed rgba(34,211,238,0.28);
+    border-radius: 6px;
+    background: rgba(8,15,22,0.55);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .product-upload-zone:hover {
+    border-color: rgba(163,230,53,0.55);
+    background: rgba(15,23,32,0.8);
+  }
+  .product-upload-zone.needs-attention {
+    border-color: rgba(251,191,36,0.8);
+    background: rgba(120,53,15,0.12);
+    box-shadow: 0 0 0 2px rgba(251,191,36,0.08);
+  }
+  .product-clipboard-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px 12px;
+    color: #a5f3fc;
+    background: rgba(8,145,178,0.08);
+    border: 1px solid rgba(34,211,238,0.18);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .product-clipboard-button:hover {
+    border-color: rgba(163,230,53,0.5);
+    background: rgba(163,230,53,0.08);
+  }
+  .product-clipboard-button svg { width: 16px; height: 16px; }
+  .product-analysis-action {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .product-analysis-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    border: 1px solid rgba(163,230,53,0.55);
+    border-radius: 6px;
+    background: #a3e635;
+    color: #10160b;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  }
+  .product-analysis-button:hover:not(:disabled) {
+    background: #bef264;
+    border-color: #bef264;
+  }
+  .product-analysis-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+    background: #25301c;
+    color: #8b967f;
+    border-color: rgba(163,230,53,0.16);
+  }
+  .product-analysis-button svg { width: 17px; height: 17px; }
+  .product-upload-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    color: #67e8f9;
+    background: rgba(8,145,178,0.12);
+    border: 1px solid rgba(34,211,238,0.18);
+    border-radius: 6px;
+  }
+  .product-upload-icon svg { width: 18px; height: 18px; }
+  .product-upload-zone strong { display: block; color: #e5e7eb; font-size: 13px; }
+  .product-upload-zone small {
+    display: block;
+    margin-top: 3px;
+    color: #6b7280;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  .product-gemini-config {
+    padding: 14px 0;
+    margin-bottom: 18px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .product-gemini-grid {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.35fr) minmax(170px, 0.85fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .product-gemini-grid.configured {
+    grid-template-columns: minmax(170px, 1fr) auto;
+  }
+  .product-gemini-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #9ca3af;
+    font-size: 11px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .product-gemini-status::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #6b7280;
+  }
+  .product-gemini-status.ready { color: #bef264; }
+  .product-gemini-status.ready::before {
+    background: #a3e635;
+    box-shadow: 0 0 9px rgba(163,230,53,0.55);
+  }
+  .product-analysis {
+    padding-top: 18px;
+    margin-top: 18px;
+    border-top: 1px solid rgba(34,211,238,0.18);
+  }
+  .product-analysis.hidden { display: none; }
+  .product-analysis-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+    gap: 20px;
+    margin: 14px 0 16px;
+  }
+  .product-analysis-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .product-fact {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
+    color: #d1d5db;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .product-fact-source {
+    min-width: 44px;
+    padding: 2px 5px;
+    border: 1px solid rgba(34,211,238,0.24);
+    border-radius: 4px;
+    color: #67e8f9;
+    font-size: 9px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .product-missing-item {
+    color: #9ca3af;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .product-missing-item::before {
+    content: '— ';
+    color: #fbbf24;
+  }
+  .product-analysis-warning {
+    color: #fbbf24;
+    font-size: 11px;
+    line-height: 1.5;
   }
 
   /* ── Tabs ── */
@@ -228,6 +449,13 @@
   @media (max-width: 640px) {
     .vp-modal { max-width: 100%; max-height: 100vh; height: 100vh; border-radius: 0; }
     .vp-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-link-row { flex-direction: column; }
+    .product-link-row button { width: 100%; }
+    .product-preview { grid-template-columns: 60px minmax(0, 1fr); }
+    .product-preview img { width: 60px; height: 60px; }
+    .product-gemini-grid,
+    .product-analysis-grid { grid-template-columns: 1fr; }
+    .product-gemini-grid button { width: 100%; }
   }
 
   /* ── Sidebars (lg+) ── */
@@ -267,33 +495,1173 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
     white-space: nowrap;
   }
+
+  /* TOOL VIDEO Studio ---------------------------------------------------- */
+  :root {
+    --studio-bg: #080a0d;
+    --studio-panel: #101419;
+    --studio-panel-strong: #151a21;
+    --studio-line: rgba(255,255,255,0.09);
+    --studio-line-strong: rgba(255,255,255,0.16);
+    --studio-text: #f5f7f8;
+    --studio-muted: #8a939f;
+    --studio-cyan: #52e1f2;
+    --studio-lime: #c9f54a;
+    --studio-coral: #ff6b64;
+    color-scheme: dark;
+  }
+
+  @keyframes studio-enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes studio-scan {
+    0% { transform: translateY(-110%); opacity: 0; }
+    20%, 75% { opacity: 0.65; }
+    100% { transform: translateY(510%); opacity: 0; }
+  }
+
+  @keyframes idle-symbol-run {
+    0% {
+      left: var(--idle-start);
+      top: calc(100% + 46px);
+      opacity: 0;
+      transform: translateX(-50%) rotate(-14deg) scale(0.78);
+    }
+    12%, 82% { opacity: var(--idle-opacity, 0.88); }
+    25% {
+      left: var(--idle-mid-a, 62%);
+      top: 74%;
+      transform: translateX(-50%) rotate(12deg) scale(0.94);
+    }
+    50% {
+      left: var(--idle-mid-b, 38%);
+      top: 48%;
+      transform: translateX(-50%) rotate(-9deg) scale(1.08);
+    }
+    75% {
+      left: var(--idle-mid-c, 70%);
+      top: 22%;
+      transform: translateX(-50%) rotate(15deg) scale(0.96);
+    }
+    100% {
+      left: var(--idle-end);
+      top: -46px;
+      opacity: 0;
+      transform: translateX(-50%) rotate(18deg) scale(0.82);
+    }
+  }
+
+  @keyframes idle-signature-rise {
+    0% { bottom: -44px; opacity: 0; }
+    12%, 82% { opacity: 1; }
+    100% { bottom: calc(100% + 44px); opacity: 0; }
+  }
+
+  @keyframes studio-blink {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(201,245,74,0.35); }
+    50% { opacity: 0.55; box-shadow: 0 0 0 5px rgba(201,245,74,0); }
+  }
+
+  @keyframes terminal-line-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes terminal-cursor {
+    0%, 48% { opacity: 1; }
+    49%, 100% { opacity: 0; }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--studio-bg); }
+
+  body {
+    margin: 0;
+    color: var(--studio-text);
+    background:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px),
+      var(--studio-bg) !important;
+    background-size: 48px 48px !important;
+    font-family: Inter, "Segoe UI", sans-serif;
+    letter-spacing: 0;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(82,225,242,0.045), transparent 28%);
+  }
+
+  .app-shell {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .app-shell > aside { display: none !important; }
+
+  .app-main {
+    width: min(1460px, calc(100% - 48px));
+    max-width: none !important;
+    margin: 0 auto;
+    padding: 22px 0 56px !important;
+  }
+
+  .studio-header {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 2px 20px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--studio-line);
+    animation: studio-enter 420ms ease-out both;
+  }
+
+  .studio-brand,
+  .studio-header-actions,
+  .studio-status,
+  .studio-link,
+  .setup-title,
+  .console-heading,
+  .console-state,
+  .mode-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .studio-brand { gap: 13px; min-width: 0; }
+
+  .studio-mark {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    color: #07090b;
+    background: var(--studio-lime);
+    border-radius: 7px;
+    transform: rotate(-3deg);
+    box-shadow: 5px 5px 0 rgba(82,225,242,0.18);
+  }
+
+  .studio-mark svg { width: 22px; height: 22px; stroke-width: 2.3; }
+
+  .studio-kicker {
+    margin: 0 0 2px;
+    color: var(--studio-cyan);
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .studio-brand h1 {
+    margin: 0;
+    color: var(--studio-text);
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 850;
+  }
+
+  .studio-brand h1 span { color: var(--studio-lime); }
+
+  .studio-tagline {
+    margin: 6px 0 0;
+    color: var(--studio-muted);
+    font-size: 12px;
+  }
+
+  .studio-header-actions { gap: 10px; flex: 0 0 auto; }
+
+  .studio-status {
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 12px;
+    color: #d9dee3;
+    background: #0c1014;
+    border: 1px solid var(--studio-line);
+    border-radius: 7px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11px;
+  }
+
+  .studio-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--studio-lime);
+    animation: studio-blink 2s ease-in-out infinite;
+  }
+
+  .studio-link {
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    color: #b8c0c8;
+    background: #0c1014;
+    border: 1px solid var(--studio-line);
+    border-radius: 7px;
+    transition: 180ms ease;
+  }
+
+  .studio-link:hover {
+    color: var(--studio-bg);
+    background: var(--studio-cyan);
+    border-color: var(--studio-cyan);
+    transform: translateY(-1px);
+  }
+
+  .studio-link svg { width: 18px; height: 18px; }
+
+  #lang-selector {
+    min-height: 38px;
+    max-width: 150px;
+    border-radius: 7px !important;
+  }
+
+  .setup-dock {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+    animation: studio-enter 420ms 60ms ease-out both;
+  }
+
+  .setup-dock-head {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+
+  .setup-title {
+    gap: 8px;
+    margin: 0;
+    color: #a6afb9;
+    font-size: 11px;
+    font-weight: 750;
+    text-transform: uppercase;
+  }
+
+  .setup-title svg { width: 14px; height: 14px; color: var(--studio-cyan); }
+
+  .setup-ready {
+    color: #65707c;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+  }
+
+  #apikey-section,
+  #model-section,
+  #domain-section,
+  #workspace-section {
+    margin: 0 !important;
+    min-width: 0;
+  }
+
+  #apikey-section:has(#apikey-body:not([style*="display: none"])),
+  #model-section:has(#model-body:not([style*="display: none"])),
+  #domain-section:has(#domain-body:not([style*="display: none"])),
+  #workspace-section:has(#workspace-body:not([style*="display: none"])) {
+    grid-column: 1 / -1;
+  }
+
+  .glass-card {
+    background: rgba(16,20,25,0.92);
+    border: 1px solid var(--studio-line);
+    border-radius: 8px !important;
+    box-shadow: none;
+    backdrop-filter: blur(14px);
+  }
+
+  .glass-card:hover {
+    border-color: var(--studio-line-strong);
+    box-shadow: none;
+  }
+
+  [id$="-compact"] {
+    min-height: 48px;
+    padding: 0 14px !important;
+  }
+
+  [id$="-compact"] > div { min-width: 0; }
+  [id$="-compact"] > div > span:first-child { display: none; }
+  [id$="-compact"] [id$="-text"] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  [id$="-arrow"] { color: var(--studio-cyan) !important; }
+
+  #apikey-body,
+  #model-body,
+  #domain-body,
+  #workspace-body { padding: 20px !important; }
+
+  .main-switcher {
+    display: inline-flex;
+    gap: 2px !important;
+    margin: 0 0 12px !important;
+    padding: 3px;
+    background: #0c1014;
+    border: 1px solid var(--studio-line);
+    border-radius: 7px;
+  }
+
+  .mtab-btn {
+    min-height: 34px;
+    padding: 0 14px !important;
+    border-radius: 5px !important;
+  }
+
+  .tab-active {
+    color: #080a0d !important;
+    background: var(--studio-lime) !important;
+    border-color: var(--studio-lime) !important;
+    box-shadow: none !important;
+    animation: none !important;
+  }
+
+  .tab-inactive {
+    color: #89929d;
+    background: transparent;
+    border: 1px solid transparent;
+    backdrop-filter: none;
+  }
+
+  .tab-inactive:hover {
+    color: #eef1f3;
+    background: #151a20;
+    border-color: var(--studio-line);
+  }
+
+  .studio-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 14px;
+    align-items: start;
+    animation: studio-enter 460ms 110ms ease-out both;
+  }
+
+  .studio-workbench { min-width: 0; }
+
+  .task-mode-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .ttype-btn {
+    min-height: 62px;
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    align-items: center;
+    gap: 9px;
+    padding: 10px 12px !important;
+    text-align: left !important;
+    border-radius: 7px !important;
+    overflow: hidden;
+  }
+
+  .mode-icon {
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+    color: var(--studio-cyan);
+    background: rgba(82,225,242,0.09);
+    border: 1px solid rgba(82,225,242,0.14);
+    border-radius: 6px;
+  }
+
+  .mode-icon svg { width: 15px; height: 15px; }
+
+  .ttype-btn.tab-active .mode-icon {
+    color: #080a0d;
+    background: rgba(8,10,13,0.13);
+    border-color: rgba(8,10,13,0.12);
+  }
+
+  .ttype-btn > span:last-child {
+    min-width: 0;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  #panel-create > [id^="form-"],
+  #panel-list {
+    animation: studio-enter 260ms ease-out both;
+  }
+
+  #panel-create > [id^="form-"] > .glass-card,
+  #form-simple-video > .glass-card,
+  #form-simple-image > .glass-card {
+    padding: 22px !important;
+    margin-bottom: 10px !important;
+  }
+
+  #panel-create h2,
+  #progress-panel h2,
+  #panel-list h2 {
+    color: #eef2f3 !important;
+    font-size: 15px !important;
+    font-weight: 750 !important;
+  }
+
+  #panel-create h2::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin: 0 9px 1px 0;
+    background: var(--studio-cyan);
+    border-radius: 2px;
+  }
+
+  #panel-create .bg-gray-800\/30,
+  #panel-create .bg-gray-800\/50,
+  #panel-create .bg-gray-900\/30 {
+    background: transparent !important;
+  }
+
+  .glass-input,
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    color: #edf1f3 !important;
+    background-color: #0b0f13 !important;
+    border-color: rgba(255,255,255,0.11) !important;
+    border-radius: 6px !important;
+    outline: none;
+  }
+
+  .glass-input:focus,
+  input:not([type="checkbox"]):not([type="radio"]):focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--studio-cyan) !important;
+    background-color: #0d1216 !important;
+    box-shadow: 0 0 0 3px rgba(82,225,242,0.1) !important;
+  }
+
+  textarea { min-height: 112px; line-height: 1.6; }
+  label, .text-gray-400 { color: #a1a9b2 !important; }
+  .text-gray-500, .text-gray-600 { color: #727c87 !important; }
+  .text-blue-300, .text-blue-400 { color: var(--studio-cyan) !important; }
+  .text-green-300, .text-green-400 { color: var(--studio-lime) !important; }
+  .text-amber-300, .text-amber-400 { color: #ffd166 !important; }
+
+  button {
+    border-radius: 6px !important;
+    letter-spacing: 0;
+  }
+
+  button.bg-blue-600,
+  button.bg-gray-700,
+  button[id$="-save"],
+  button[id$="-add"] {
+    color: #071014 !important;
+    background: var(--studio-cyan) !important;
+    box-shadow: none !important;
+  }
+
+  button.bg-blue-600:hover,
+  button.bg-gray-700:hover,
+  button[id$="-save"]:hover,
+  button[id$="-add"]:hover { filter: brightness(1.08); }
+
+  .glow-btn {
+    min-height: 50px;
+    color: #080a0d !important;
+    background: var(--studio-lime) !important;
+    border: 1px solid var(--studio-lime);
+    box-shadow: 0 8px 24px rgba(201,245,74,0.12);
+  }
+
+  .glow-btn::after { display: none; }
+
+  .glow-btn:hover:not(:disabled) {
+    color: #080a0d !important;
+    background: #d7ff63 !important;
+    box-shadow: 0 10px 30px rgba(201,245,74,0.2);
+    transform: translateY(-1px);
+  }
+
+  .studio-console {
+    position: sticky;
+    top: 14px;
+    min-width: 0;
+    min-height: calc(100vh - 28px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .console-idle,
+  #progress-panel {
+    position: relative;
+    margin: 0 !important;
+    padding: 16px !important;
+    overflow: hidden;
+    background: rgba(12,16,20,0.96);
+    border: 1px solid var(--studio-line);
+    border-radius: 8px !important;
+  }
+
+  .studio-layout:has(#progress-panel:not(.hidden)) .console-idle { display: none; }
+
+  .console-heading { justify-content: space-between; gap: 12px; }
+
+  .console-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #dce1e5;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .console-label svg { width: 15px; height: 15px; color: var(--studio-cyan); }
+
+  .console-state {
+    gap: 7px;
+    color: var(--studio-lime);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+  }
+
+  .signal-stage {
+    position: relative;
+    aspect-ratio: 9 / 12;
+    max-height: 440px;
+    margin: 14px 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(rgba(82,225,242,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(82,225,242,0.055) 1px, transparent 1px),
+      #090d11;
+    background-size: 26px 26px;
+    border: 1px solid rgba(82,225,242,0.12);
+    border-radius: 6px;
+  }
+
+  .signal-stage::before,
+  .signal-stage::after {
+    content: '';
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    border-color: var(--studio-cyan);
+    opacity: 0.65;
+  }
+
+  .signal-stage::before {
+    top: 12px;
+    left: 12px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .signal-stage::after {
+    right: 12px;
+    bottom: 12px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+  }
+
+  .signal-scan {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 22%;
+    border-bottom: 1px solid rgba(82,225,242,0.7);
+    background: linear-gradient(180deg, transparent, rgba(82,225,242,0.08));
+    animation: studio-scan 4.6s ease-in-out infinite;
+  }
+
+  .idle-symbols {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .idle-symbol {
+    --idle-start: 72%;
+    --idle-end: 24%;
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    color: var(--studio-cyan);
+    animation: idle-symbol-run var(--idle-duration, 8s) linear infinite;
+    animation-delay: var(--idle-delay, 0s);
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+
+  .idle-symbol svg { width: 25px; height: 25px; stroke-width: 1.6; }
+  .idle-symbol.heart { color: #ff6b7a; }
+  .idle-symbol.heart svg { fill: rgba(255,107,122,0.2); }
+  .idle-symbol.smile { color: var(--studio-lime); }
+  .idle-symbol.cyan { color: var(--studio-cyan); }
+  .idle-symbol.small { width: 27px; height: 27px; opacity: 0.72; }
+  .idle-symbol.small svg { width: 19px; height: 19px; }
+  .idle-symbol.tiny { width: 22px; height: 22px; opacity: 0.58; }
+  .idle-symbol.tiny svg { width: 15px; height: 15px; }
+  .idle-symbol.large { width: 44px; height: 44px; }
+  .idle-symbol.large svg { width: 33px; height: 33px; stroke-width: 1.35; }
+
+  .idle-signature {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .idle-signature-track {
+    position: absolute;
+    bottom: -44px;
+    left: 50%;
+    display: block;
+    width: max-content;
+    animation: idle-signature-rise 8.5s linear infinite;
+    transform: translateX(-50%);
+  }
+
+  .idle-signature-track span {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: max-content;
+    padding: 7px 12px;
+    background: rgba(7,12,16,0.84);
+    border-top: 1px solid rgba(82,225,242,0.16);
+    border-bottom: 1px solid rgba(82,225,242,0.16);
+    color: #d7ff63;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .idle-signature-track span[aria-hidden="true"] { display: none; }
+
+  .idle-signature-track svg {
+    width: 13px;
+    height: 13px;
+    color: #ff6b7a;
+    fill: currentColor;
+  }
+
+  .signal-core { position: relative; z-index: 2; text-align: center; }
+
+  .signal-core svg {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 12px;
+    color: var(--studio-cyan);
+    stroke-width: 1.5;
+  }
+
+  .signal-core strong {
+    display: block;
+    color: #e7ecef;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .signal-core span {
+    display: block;
+    margin-top: 5px;
+    color: #5f6c78;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+  }
+
+  .console-log {
+    display: grid;
+    gap: 7px;
+    padding-top: 2px;
+    color: #66727e;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+  }
+
+  .console-log span { display: flex; justify-content: space-between; gap: 12px; }
+  .console-log b { color: #aeb6be; font-weight: 500; }
+  .console-log .ok { color: var(--studio-lime); }
+
+  #progress-panel h2::after {
+    content: 'LIVE';
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: 2px;
+    color: var(--studio-coral);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 9px;
+    font-weight: 800;
+  }
+
+  #progress-panel > .flex:first-child { padding-right: 0; }
+
+  #progress-panel #progress-bar {
+    background: var(--studio-lime) !important;
+    box-shadow: 0 0 16px rgba(201,245,74,0.24);
+  }
+
+  #progress-panel .bg-gray-800\/50 { background: #20262d !important; }
+  #steps-container { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; }
+  #progress-message { color: #8f9aa5 !important; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  #btn-stop { background: rgba(255,107,100,0.14) !important; border: 1px solid rgba(255,107,100,0.28); }
+
+  .code-terminal {
+    position: relative;
+    flex: 1;
+    min-height: 360px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(7,10,12,0.97);
+    border: 1px solid rgba(82,225,242,0.12);
+    border-radius: 8px;
+  }
+
+  .studio-layout:has(#progress-panel:not(.hidden)) .code-terminal { display: flex; }
+
+  .terminal-head {
+    height: 38px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 12px;
+    border-bottom: 1px solid rgba(82,225,242,0.1);
+    background: rgba(82,225,242,0.025);
+  }
+
+  .terminal-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #9da8b1;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 9px;
+    font-weight: 750;
+    text-transform: uppercase;
+  }
+
+  .terminal-title svg { width: 13px; height: 13px; color: var(--studio-cyan); }
+
+  .terminal-dots { display: flex; align-items: center; gap: 5px; }
+
+  .terminal-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #39434c;
+  }
+
+  .terminal-dots span:first-child { background: var(--studio-coral); }
+  .terminal-dots span:nth-child(2) { background: #ffd166; }
+  .terminal-dots span:last-child { background: var(--studio-lime); }
+
+  .terminal-stream {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding: 12px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+    line-height: 1.65;
+  }
+
+  .terminal-stream::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(7,10,12,0.96), transparent 18%, transparent 84%, rgba(7,10,12,0.55));
+  }
+
+  .terminal-lines {
+    position: absolute;
+    right: 12px;
+    bottom: 30px;
+    left: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2px;
+  }
+
+  .terminal-line {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 54px 12px minmax(0, 1fr) auto;
+    gap: 4px;
+    color: #64717c;
+    white-space: nowrap;
+    animation: terminal-line-in 180ms ease-out both;
+  }
+
+  .terminal-line .term-time { color: #394650; }
+  .terminal-line .term-prompt { color: var(--studio-lime); }
+  .terminal-line .term-code { overflow: hidden; text-overflow: ellipsis; }
+  .terminal-line .term-value { color: #91a1ae; }
+  .terminal-line.is-cyan .term-code { color: var(--studio-cyan); }
+  .terminal-line.is-lime .term-code,
+  .terminal-line.is-lime .term-value { color: var(--studio-lime); }
+  .terminal-line.is-dim .term-code { color: #53606b; }
+
+  .terminal-command {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    left: 12px;
+    z-index: 3;
+    color: var(--studio-lime);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 10px;
+  }
+
+  .terminal-command::after {
+    content: '▌';
+    margin-left: 3px;
+    color: var(--studio-cyan);
+    animation: terminal-cursor 850ms steps(1, end) infinite;
+  }
+
+  #artifacts-area,
+  #result-area,
+  #image-result {
+    background: #0a0e12 !important;
+    border: 1px solid var(--studio-line) !important;
+    border-radius: 6px !important;
+  }
+
+  #result-video,
+  #result-image,
+  .vp-modal,
+  .vp-card { border-radius: 6px !important; }
+
+  .vp-modal { background: #101419; border-color: var(--studio-line-strong); }
+  .vp-card.selected { border-color: var(--studio-lime); box-shadow: 0 0 0 1px var(--studio-lime); }
+  .vp-tab.active, .vp-btn-confirm { color: #080a0d; background: var(--studio-lime); }
+
+  footer { display: none; }
+
+  @media (max-width: 1180px) {
+    .app-main { width: min(100% - 32px, 1080px); }
+    .studio-layout { grid-template-columns: minmax(0, 1fr) 310px; }
+    .task-mode-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 900px) {
+    .setup-dock { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .studio-layout { grid-template-columns: 1fr; }
+    .studio-console { position: static; min-height: 0; }
+    .console-idle { display: none; }
+    .signal-stage { aspect-ratio: 16 / 7; max-height: 280px; }
+    .code-terminal { min-height: 220px; max-height: 260px; }
+  }
+
+  @media (max-width: 640px) {
+    .app-main { width: 100%; padding: 14px 12px 36px !important; }
+    .studio-header { align-items: flex-start; gap: 12px; min-height: 64px; padding-bottom: 14px; }
+    .studio-mark { width: 36px; height: 36px; }
+    .studio-kicker, .studio-tagline, .studio-status, .studio-link { display: none; }
+    .studio-brand h1 { font-size: 21px; margin-top: 8px; }
+    .studio-header-actions { margin-left: auto; }
+    #lang-selector { width: 128px; max-width: 128px; min-height: 36px; font-size: 12px; }
+    .setup-dock { grid-template-columns: 1fr; gap: 7px; }
+    .setup-dock-head { margin-bottom: 0; }
+    .setup-ready { display: none; }
+    #apikey-section:has(#apikey-body:not([style*="display: none"])),
+    #model-section:has(#model-body:not([style*="display: none"])),
+    #domain-section:has(#domain-body:not([style*="display: none"])),
+    #workspace-section:has(#workspace-body:not([style*="display: none"])) { grid-column: auto; }
+    #apikey-body, #model-body, #domain-body, #workspace-body { padding: 16px !important; }
+    #apikey-body .flex.gap-3,
+    #model-body .flex.gap-3,
+    #workspace-body .flex.gap-3 { flex-wrap: wrap; }
+    #apikey-body input,
+    #model-body select,
+    #workspace-path-input { min-width: 100%; }
+    #workspace-name-input { width: 100% !important; }
+    .main-switcher { width: 100%; }
+    .mtab-btn { flex: 1; }
+    .task-mode-tabs {
+      display: flex !important;
+      gap: 7px !important;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 4px;
+    }
+    .ttype-btn { flex: 0 0 148px !important; min-height: 56px; scroll-snap-align: start; }
+    #panel-create > [id^="form-"] > .glass-card,
+    #form-simple-video > .glass-card,
+    #form-simple-image > .glass-card { padding: 16px !important; }
+    #panel-create .grid { gap: 12px !important; }
+    #panel-create .flex.gap-4 { flex-wrap: wrap; }
+    .glow-btn { min-height: 48px; }
+    #progress-panel { padding: 15px !important; }
+    .vp-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 380px) {
+    .studio-mark { display: none; }
+    .studio-brand h1 { font-size: 19px; }
+    #lang-selector { width: 116px; max-width: 116px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    .signal-scan { animation-duration: 4.6s !important; animation-iteration-count: infinite !important; }
+    .idle-symbol { animation-duration: var(--idle-duration, 8s) !important; animation-iteration-count: infinite !important; }
+    .idle-signature-track { animation-duration: 8.5s !important; animation-iteration-count: infinite !important; }
+  }
+
+  body.auth-locked { overflow: hidden; }
+  body.auth-locked .app-shell { display: none; }
+  .auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: #080c10;
+  }
+  .auth-gate.hidden { display: none; }
+  .auth-gate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(34,211,238,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,0.045) 1px, transparent 1px);
+    background-size: 34px 34px;
+  }
+  .auth-panel {
+    position: relative;
+    width: min(420px, 100%);
+    border: 1px solid rgba(34,211,238,0.22);
+    border-radius: 8px;
+    background: rgba(12,17,23,0.97);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+    overflow: hidden;
+  }
+  .auth-panel-head { padding: 24px 26px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .auth-panel-brand { display: flex; align-items: center; gap: 12px; }
+  .auth-panel-brand svg { width: 22px; height: 22px; color: var(--studio-cyan); }
+  .auth-panel-brand h1 { margin: 0; font-size: 19px; font-weight: 800; }
+  .auth-panel-brand h1 span { color: var(--studio-lime); }
+  .auth-panel-head p { margin: 9px 0 0; color: #7f8a99; font-size: 12px; }
+  .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; padding: 8px; gap: 6px; }
+  .auth-tab {
+    min-height: 38px;
+    color: #7f8a99;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .auth-tab.active { color: #071013; background: var(--studio-lime); border-color: var(--studio-lime); }
+  .auth-form { display: grid; gap: 13px; padding: 18px 26px 26px; }
+  .auth-form.hidden { display: none; }
+  .auth-form label { color: #9aa4b2; font-size: 12px; }
+  .auth-form input { width: 100%; margin-top: 6px; }
+  .auth-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 3px;
+    border-radius: 6px;
+    background: var(--studio-lime);
+    color: #0b1107;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .auth-submit:disabled { cursor: wait; opacity: 0.55; }
+  .auth-error { min-height: 18px; color: #fb7185; font-size: 12px; line-height: 1.45; }
+  .auth-success { min-height: 18px; color: #a3e635; font-size: 12px; line-height: 1.45; }
+  .auth-link {
+    width: fit-content;
+    color: #67e8f9;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .auth-link:hover { color: #cffafe; }
+  .auth-link-back { display: inline-flex; align-items: center; gap: 6px; color: #94a3b8; }
+  .auth-link-back svg { width: 14px; height: 14px; }
+  .auth-setup-note { color: #facc15; font-size: 11px; line-height: 1.5; }
+  .account-chip { display: flex; align-items: center; gap: 8px; }
+  .account-name { color: #cbd5e1; font-size: 11px; font-weight: 650; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+  .account-role { color: var(--studio-lime); font-size: 9px; font-family: ui-monospace, SFMono-Regular, monospace; text-transform: uppercase; }
+  .account-icon-button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 6px;
+    color: #94a3b8;
+    background: rgba(255,255,255,0.025);
+  }
+  .account-icon-button:hover { color: var(--studio-cyan); border-color: rgba(34,211,238,0.35); }
+  .account-icon-button svg { width: 16px; height: 16px; }
+  .admin-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 180;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(3,7,11,0.84);
+  }
+  .admin-overlay.hidden { display: none; }
+  .admin-panel {
+    width: min(940px, 100%);
+    max-height: min(720px, 92vh);
+    overflow: auto;
+    border: 1px solid rgba(34,211,238,0.22);
+    border-radius: 8px;
+    background: #0c1117;
+    box-shadow: 0 24px 90px rgba(0,0,0,0.55);
+  }
+  .admin-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .admin-panel-head h2 { margin: 0; font-size: 16px; font-weight: 750; }
+  .admin-stats { display: flex; flex-wrap: wrap; gap: 16px; padding: 14px 20px; color: #94a3b8; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .admin-stats strong { color: var(--studio-lime); }
+  .admin-user-list { display: grid; }
+  .admin-user-row { display: grid; grid-template-columns: minmax(190px, 1.5fr) 110px 120px 70px 92px; gap: 10px; align-items: center; min-height: 66px; padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.055); }
+  .admin-user-row:last-child { border-bottom: 0; }
+  .admin-user-email { color: #e2e8f0; font-size: 12px; overflow-wrap: anywhere; }
+  .admin-user-name { color: #64748b; font-size: 11px; margin-top: 3px; }
+  .admin-user-row select { min-height: 34px; font-size: 11px; }
+  .admin-save-user { min-height: 34px; border-radius: 5px; background: #22d3ee; color: #071013; font-size: 11px; font-weight: 750; }
+  .admin-user-actions { display: grid; grid-template-columns: 1fr 34px; gap: 6px; }
+  .admin-delete-user {
+    display: grid;
+    place-items: center;
+    min-height: 34px;
+    border: 1px solid rgba(251,113,133,0.25);
+    border-radius: 5px;
+    color: #fb7185;
+    background: rgba(127,29,29,0.12);
+  }
+  .admin-delete-user:hover { border-color: rgba(251,113,133,0.55); background: rgba(127,29,29,0.24); }
+  .admin-delete-user svg { width: 14px; height: 14px; }
+  @media (max-width: 720px) {
+    .account-name, .account-role, .studio-status { display: none; }
+    .admin-user-row { grid-template-columns: minmax(0, 1fr) 92px; }
+    .admin-user-row > :nth-child(4) { display: none; }
+  }
 </style>
 </head>
-<body class="text-gray-100 min-h-screen font-sans" style="background: radial-gradient(ellipse at 50% 0%, rgba(30,64,175,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(245,158,11,0.06) 0%, transparent 50%), #030712;">
+<body class="auth-locked text-gray-100 min-h-screen font-sans">
 
-<div class="flex justify-center gap-3 px-4">
-
-<!-- Left sidebar -->
-<aside class="hidden lg:block sticky top-[120px] self-start w-[130px] shrink-0 mt-8">
-  <div class="sidebar-card">
-    <div class="stitle">⭐ Ủng hộ dự án</div>
-    <p class="text-gray-500 text-xs leading-relaxed mb-2">Mã nguồn mở miễn phí, không thu phí. Bạn có thể ủng hộ dự án:</p>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">⭐ Cho một Star</a>
-    <p class="text-gray-600 text-xs px-1 -mt-0.5 mb-1">Giúp nhiều người biết tới công cụ này hơn</p>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">🔗 Mở GitHub</a>
-    <p class="text-gray-600 text-xs px-1 -mt-0.5 mb-1">Repo chính của TOOL-VIDEO</p>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO/issues" target="_blank" rel="noopener">💬 Góp ý</a>
-    <p class="text-gray-600 text-xs px-1 -mt-0.5 mb-1">Báo lỗi hoặc đề xuất tính năng</p>
-    <p class="text-gray-600 text-xs mt-2 leading-relaxed">Cảm ơn bạn đã ủng hộ ❤️</p>
+<div id="auth-gate" class="auth-gate" aria-live="polite">
+  <div class="auth-panel">
+    <div class="auth-panel-head">
+      <div class="auth-panel-brand"><i data-lucide="clapperboard"></i><h1>TOOL <span>VIDEO</span></h1></div>
+      <p data-i18n="authSubtitle">Đăng nhập để quản lý và bảo vệ video của bạn.</p>
+    </div>
+    <div id="auth-tabs" class="auth-tabs">
+      <button id="auth-tab-login" type="button" class="auth-tab active" onclick="showAuthMode('login')" data-i18n="authLogin">Đăng nhập</button>
+      <button id="auth-tab-register" type="button" class="auth-tab" onclick="showAuthMode('register')" data-i18n="authRegister">Đăng ký</button>
+    </div>
+    <form id="auth-login-form" class="auth-form" onsubmit="submitAuth(event, 'login')">
+      <label><span data-i18n="authEmail">Email</span><input id="auth-login-email" type="email" autocomplete="email" required class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <label><span data-i18n="authPassword">Mật khẩu</span><input id="auth-login-password" type="password" autocomplete="current-password" required class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <button type="button" class="auth-link" onclick="showAuthMode('forgot')" data-i18n="authForgotPassword">Quên mật khẩu?</button>
+      <p id="auth-login-message" class="auth-success"></p>
+      <p id="auth-login-error" class="auth-error"></p>
+      <button type="submit" class="auth-submit"><i data-lucide="log-in"></i><span data-i18n="authLogin">Đăng nhập</span></button>
+    </form>
+    <form id="auth-register-form" class="auth-form hidden" onsubmit="submitAuth(event, 'register')">
+      <p id="auth-setup-note" class="auth-setup-note hidden" data-i18n="authFirstAdmin">Tài khoản đầu tiên sẽ là superadmin.</p>
+      <label><span data-i18n="authName">Tên hiển thị</span><input id="auth-register-name" autocomplete="name" required minlength="2" maxlength="80" class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <label><span data-i18n="authEmail">Email</span><input id="auth-register-email" type="email" autocomplete="email" required class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <label><span data-i18n="authPassword">Mật khẩu</span><input id="auth-register-password" type="password" autocomplete="new-password" required minlength="8" class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <p class="text-[11px] text-gray-600" data-i18n="authPasswordHint">Tối thiểu 8 ký tự, gồm cả chữ và số.</p>
+      <p id="auth-register-error" class="auth-error"></p>
+      <button type="submit" class="auth-submit"><i data-lucide="user-plus"></i><span data-i18n="authCreateAccount">Tạo tài khoản</span></button>
+    </form>
+    <form id="auth-forgot-form" class="auth-form hidden" onsubmit="submitForgotPassword(event)">
+      <button type="button" class="auth-link auth-link-back" onclick="showAuthMode('login')"><i data-lucide="arrow-left"></i><span data-i18n="authBackToLogin">Quay lại đăng nhập</span></button>
+      <div>
+        <p class="text-sm font-semibold text-gray-200" data-i18n="authForgotTitle">Khôi phục mật khẩu</p>
+        <p class="text-[11px] text-gray-500 mt-1" data-i18n="authForgotHint">Nhập email tài khoản để nhận liên kết đặt lại mật khẩu.</p>
+      </div>
+      <label><span data-i18n="authEmail">Email</span><input id="auth-forgot-email" type="email" autocomplete="email" required class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <p id="auth-forgot-message" class="auth-success"></p>
+      <p id="auth-forgot-error" class="auth-error"></p>
+      <button type="submit" class="auth-submit"><i data-lucide="mail"></i><span data-i18n="authSendResetLink">Gửi liên kết khôi phục</span></button>
+    </form>
+    <form id="auth-reset-form" class="auth-form hidden" onsubmit="submitResetPassword(event)">
+      <div>
+        <p class="text-sm font-semibold text-gray-200" data-i18n="authResetTitle">Đặt mật khẩu mới</p>
+        <p class="text-[11px] text-gray-500 mt-1" data-i18n="authPasswordHint">Tối thiểu 8 ký tự, gồm cả chữ và số.</p>
+      </div>
+      <label><span data-i18n="authNewPassword">Mật khẩu mới</span><input id="auth-reset-password" type="password" autocomplete="new-password" required minlength="8" class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <label><span data-i18n="authConfirmPassword">Nhập lại mật khẩu</span><input id="auth-reset-confirm" type="password" autocomplete="new-password" required minlength="8" class="glass-input rounded-md px-3 py-2.5 text-sm"></label>
+      <p id="auth-reset-error" class="auth-error"></p>
+      <button type="submit" class="auth-submit"><i data-lucide="key-round"></i><span data-i18n="authResetPassword">Đặt lại mật khẩu</span></button>
+    </form>
   </div>
-</aside>
+</div>
+
+<div id="admin-overlay" class="admin-overlay hidden" onclick="if(event.target===this)closeAdminPanel()">
+  <section class="admin-panel" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+    <div class="admin-panel-head">
+      <div><p class="studio-kicker">ROLE BASED ACCESS</p><h2 id="admin-title" data-i18n="adminTitle">Quản lý người dùng</h2></div>
+      <button type="button" class="account-icon-button" onclick="closeAdminPanel()" aria-label="Đóng"><i data-lucide="x"></i></button>
+    </div>
+    <div id="admin-stats" class="admin-stats"></div>
+    <div id="admin-user-list" class="admin-user-list"></div>
+  </section>
+</div>
+
+<div class="app-shell">
 
 <!-- Main content -->
-<div class="max-w-4xl flex-1 min-w-0 py-8">
+<div class="app-main">
 
   <!-- Header -->
-  <div class="text-center mb-10 relative">
-    <div class="absolute right-0 top-0" style="z-index: 10;">
+  <header class="studio-header">
+    <div class="studio-brand">
+      <div class="studio-mark" aria-hidden="true"><i data-lucide="clapperboard"></i></div>
+      <div>
+        <p class="studio-kicker">AI creative studio</p>
+        <h1>TOOL <span>VIDEO</span></h1>
+        <p class="studio-tagline" data-i18n="subtitle">Video AI, tạo chỉ với một lần bấm</p>
+      </div>
+    </div>
+    <div class="studio-header-actions">
+      <div class="studio-status"><span class="studio-status-dot"></span><span>STUDIO READY</span></div>
+      <button id="admin-open" type="button" class="account-icon-button hidden" onclick="openAdminPanel()" data-i18n-title="adminTitle" title="Quản lý người dùng" aria-label="Quản lý người dùng"><i data-lucide="shield-check"></i></button>
+      <div id="account-chip" class="account-chip hidden">
+        <div><p id="account-name" class="account-name"></p><p id="account-role" class="account-role"></p></div>
+        <button type="button" class="account-icon-button" onclick="logoutAccount()" data-i18n-title="authLogout" title="Đăng xuất" aria-label="Đăng xuất"><i data-lucide="log-out"></i></button>
+      </div>
       <select id="lang-selector" onchange="switchLang(this.value)" class="glass-input rounded-lg px-3 py-1.5 text-sm cursor-pointer text-gray-100">
         <option value="vi">🇻🇳 Tiếng Việt</option>
         <option value="zh">🇨🇳 中文</option>
@@ -311,24 +1679,13 @@
         <option value="it">🇮🇹 Italiano</option>
       </select>
     </div>
-    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-300 to-amber-400 bg-clip-text text-transparent" style="filter: drop-shadow(0 0 20px rgba(59,130,246,0.2)); position: relative; z-index: 0;">
-      Agnes Video Generator
-    </h1>
-    <p class="text-gray-500 mt-2 text-sm tracking-wide" data-i18n="subtitle">AI 视频，一键生成</p>
-  </div>
+  </header>
 
-  <!-- Resource links -->
-  <nav class="flex justify-center items-center gap-4 mb-8 text-xs tracking-wide">
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="flex items-center gap-1 text-amber-400/70 hover:text-amber-300 transition-colors">🎬 Demo</a>
-    <span class="text-white/5 select-none">·</span>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="flex items-center gap-1 text-gray-500 hover:text-gray-300 transition-colors">🏠 Home</a>
-    <span class="text-white/5 select-none">·</span>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="flex items-center gap-1 text-gray-500 hover:text-gray-300 transition-colors">📖 Guides</a>
-    <span class="text-white/5 select-none">·</span>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO/issues" target="_blank" rel="noopener" class="flex items-center gap-1 text-gray-500 hover:text-gray-300 transition-colors">❓ FAQ</a>
-    <span class="text-white/5 select-none">·</span>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="flex items-center gap-1 text-gray-500 hover:text-gray-300 transition-colors">📖 GitHub</a>
-  </nav>
+  <section class="setup-dock">
+    <div class="setup-dock-head">
+      <h2 class="setup-title"><i data-lucide="sliders-horizontal"></i>Thiết lập hệ thống</h2>
+      <span class="setup-ready">4 MODULES / ONLINE</span>
+    </div>
 
   <!-- API Key -->
   <div id="apikey-section" class="glass-card rounded-2xl mb-6 overflow-hidden transition-all duration-300">
@@ -491,32 +1848,35 @@
       <div id="workspace-list" class="space-y-2"></div>
     </div>
   </div>
+  </section>
 
   <!-- Main Tabs: 新建任务 / 任务列表 -->
-  <div class="flex gap-2 mb-6">
+  <div class="main-switcher flex gap-2 mb-6">
     <button onclick="switchMainTab('create')" id="mtab-create" class="mtab-btn px-5 py-2.5 rounded-lg text-sm font-medium tab-active transition" data-i18n="tabCreate">新建任务</button>
     <button onclick="switchMainTab('list')" id="mtab-list" class="mtab-btn px-5 py-2.5 rounded-lg text-sm font-medium tab-inactive transition" data-i18n="tabList">任务列表</button>
   </div>
 
   <!-- ═══════════ Create Panel ═══════════ -->
+  <div class="studio-layout">
+  <section class="studio-workbench">
   <div id="panel-create">
 
     <!-- Task Type Tabs -->
-    <div class="flex gap-2 mb-4">
+    <div class="task-mode-tabs flex gap-2 mb-4">
       <button onclick="switchTaskType('simple')" id="ttype-simple" class="ttype-btn flex-1 px-4 py-3 rounded-xl text-sm font-medium tab-inactive transition text-center">
-        <span class="text-lg">🎬🖼️</span><br><span data-i18n="ttSimple">简易图像视频</span>
+        <span class="mode-icon" aria-hidden="true"><i data-lucide="wand-sparkles"></i></span><span data-i18n="ttSimple">简易图像视频</span>
       </button>
       <button onclick="switchTaskType('creative')" id="ttype-creative" class="ttype-btn flex-1 px-4 py-3 rounded-xl text-sm font-medium tab-active transition text-center">
-        <span class="text-lg">🎥</span><br><span data-i18n="ttCreative">创意长视频</span>
+        <span class="mode-icon" aria-hidden="true"><i data-lucide="clapperboard"></i></span><span data-i18n="ttCreative">创意长视频</span>
       </button>
       <button onclick="switchTaskType('manuscript')" id="ttype-manuscript" class="ttype-btn flex-1 px-4 py-3 rounded-xl text-sm font-medium tab-inactive transition text-center">
-        <span class="text-lg">📝</span><br><span data-i18n="ttManuscript">稿件长视频</span>
+        <span class="mode-icon" aria-hidden="true"><i data-lucide="file-text"></i></span><span data-i18n="ttManuscript">稿件长视频</span>
       </button>
       <button onclick="switchTaskType('anchor')" id="ttype-anchor" class="ttype-btn flex-1 px-4 py-3 rounded-xl text-sm font-medium tab-inactive transition text-center">
-        <span class="text-lg">🎙️</span><br><span data-i18n="ttAnchor">数字人口播</span>
+        <span class="mode-icon" aria-hidden="true"><i data-lucide="mic-2"></i></span><span data-i18n="ttAnchor">数字人口播</span>
       </button>
-      <button onclick="switchTaskType('poetry')" id="ttype-poetry" class="ttype-btn flex-1 px-4 py-3 rounded-xl text-sm font-medium tab-inactive transition text-center">
-        <span class="text-lg">📜</span><br><span data-i18n="ttPoetry">诗词视频</span>
+      <button onclick="switchTaskType('product')" id="ttype-product" class="ttype-btn flex-1 px-4 py-3 rounded-xl text-sm font-medium tab-inactive transition text-center">
+        <span class="mode-icon" aria-hidden="true"><i data-lucide="shopping-bag"></i></span><span data-i18n="ttProduct">商品视频</span>
       </button>
     </div>
 
@@ -1312,7 +2672,207 @@
       </button>
     </div>
 
-    <!-- ═══════ Tab 5: Poetry Video ═══════ -->
+    <!-- ═══════ Tab 5: Product Video ═══════ -->
+    <div id="form-product" class="hidden">
+      <div class="glass-card rounded-2xl p-6 mb-4">
+        <div class="flex items-start justify-between gap-4 mb-5">
+          <div>
+            <h2 class="text-lg font-semibold text-blue-300 mb-1" data-i18n="productSettings">Thiết lập sản phẩm</h2>
+            <p class="text-xs text-gray-500" data-i18n="productSourceHint">Lấy ảnh sản phẩm trước, sau đó Gemini mới nhìn ảnh và viết kịch bản.</p>
+          </div>
+          <div class="flex items-center gap-3 pt-0.5 whitespace-nowrap">
+            <span class="text-[10px] text-green-400 font-mono">AI VISION</span>
+            <span id="pr_gemini_status" class="product-gemini-status" data-i18n="geminiMissing">Chưa cấu hình</span>
+          </div>
+        </div>
+
+        <div class="product-gemini-config hidden" aria-hidden="true">
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <span class="text-xs text-gray-300 font-medium" data-i18n="geminiConfigTitle">Gemini phân tích sản phẩm</span>
+          </div>
+          <div id="pr_gemini_grid" class="product-gemini-grid">
+            <input id="pr_gemini_key" type="password" autocomplete="off" data-i18n-placeholder="geminiKeyPlaceholder" placeholder="Gemini API Key" class="glass-input rounded-md px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600">
+            <select id="pr_gemini_model" class="glass-input rounded-md px-3 py-2.5 text-sm text-gray-100" aria-label="Gemini model">
+              <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+              <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+              <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite</option>
+            </select>
+            <div class="flex gap-2">
+              <button id="pr_gemini_save" type="button" onclick="saveGeminiConfig()" class="inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-gray-950 rounded-md text-sm font-semibold transition">
+                <i data-lucide="save" class="w-4 h-4"></i><span data-i18n="geminiSave">Lưu</span>
+              </button>
+              <button id="pr_gemini_clear" type="button" onclick="clearGeminiConfig()" class="hidden inline-flex items-center justify-center px-3 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md transition" data-i18n-title="geminiClear" title="Xóa Gemini API Key">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productLink">Link sản phẩm</label>
+          <div class="flex gap-2 product-link-row">
+            <input id="pr_url" type="url" oninput="handleProductUrlInput()" data-i18n-placeholder="productLinkPlaceholder" placeholder="https://shopee.vn/..." class="flex-1 glass-input rounded-lg px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600">
+            <button id="pr_inspect" type="button" onclick="inspectProductLink()" class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition whitespace-nowrap">
+              <i data-lucide="scan-search" class="inline-block w-4 h-4 mr-1.5"></i><span data-i18n="productInspect">Lấy ảnh từ link</span>
+            </button>
+          </div>
+          <p id="pr_link_error" class="hidden text-xs text-red-400 mt-2"></p>
+        </div>
+
+        <div id="pr_source_preview" class="product-preview hidden">
+          <img id="pr_source_image" alt="Ảnh sản phẩm từ liên kết">
+          <div class="min-w-0">
+            <p id="pr_source_site" class="text-[10px] text-blue-300 font-mono uppercase mb-1"></p>
+            <p id="pr_source_title" class="text-sm text-gray-200 font-medium truncate"></p>
+            <p id="pr_source_description" class="text-xs text-gray-500 mt-1 line-clamp-2"></p>
+          </div>
+        </div>
+
+        <div class="product-source-divider"><span data-i18n="orUploadImage">hoặc tải ảnh trực tiếp</span></div>
+
+        <label class="product-upload-zone" for="pr_image">
+          <span class="product-upload-icon"><i data-lucide="image-up"></i></span>
+          <span class="min-w-0">
+            <strong data-i18n="productImage">Ảnh sản phẩm</strong>
+            <small id="pr_image_name" data-i18n="productImageHint">JPG, PNG, WEBP hoặc AVIF · tối đa 12 MB</small>
+          </span>
+          <input id="pr_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" class="hidden" onchange="handleProductImage(this)">
+        </label>
+        <button type="button" onclick="pasteProductImage()" class="product-clipboard-button">
+          <i data-lucide="clipboard-paste"></i>
+          <span data-i18n="productPasteImage">Dán ảnh từ clipboard</span>
+        </button>
+
+        <div class="product-analysis-action">
+          <button id="pr_analyze" type="button" onclick="analyzeProductWithGemini()" class="product-analysis-button" disabled>
+            <i data-lucide="sparkles"></i>
+            <span data-i18n="productAnalyze">Gemini nhìn ảnh &amp; viết kịch bản</span>
+          </button>
+          <p id="pr_analysis_error" class="hidden text-xs text-red-400"></p>
+        </div>
+
+        <section id="pr_analysis_panel" class="product-analysis hidden" aria-live="polite">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-sm text-cyan-300 font-semibold" data-i18n="productAnalysisTitle">Kết quả Gemini đã kiểm chứng</p>
+              <p id="pr_analysis_summary" class="text-xs text-gray-400 mt-1 leading-relaxed"></p>
+            </div>
+            <span id="pr_analysis_model" class="text-[10px] text-lime-300 font-mono whitespace-nowrap"></span>
+          </div>
+          <div class="product-analysis-grid">
+            <div>
+              <p class="text-[11px] text-gray-500 uppercase mb-2" data-i18n="verifiedFacts">Thông tin có bằng chứng</p>
+              <ul id="pr_verified_facts" class="product-analysis-list"></ul>
+            </div>
+            <div>
+              <p class="text-[11px] text-gray-500 uppercase mb-2" data-i18n="missingInfo">Thông tin chưa xác định</p>
+              <ul id="pr_missing_info" class="product-analysis-list"></ul>
+            </div>
+          </div>
+          <label class="block text-sm text-gray-300 mb-1.5" for="pr_script" data-i18n="productScript">Kịch bản Gemini đề xuất</label>
+          <textarea id="pr_script" rows="6" data-i18n-placeholder="productScriptHint" placeholder="Kịch bản chỉ dùng dữ liệu có bằng chứng..." class="w-full glass-input rounded-md px-4 py-3 text-sm resize-y text-gray-100 placeholder-gray-600"></textarea>
+          <p id="pr_analysis_warning" class="product-analysis-warning mt-2" data-i18n="productAnalysisGuard">Hãy kiểm tra kịch bản trước khi tạo video. Hệ thống sẽ không chuyển các dữ liệu thiếu bằng chứng sang bước tạo cảnh.</p>
+        </section>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 mb-4">
+        <h2 class="text-lg font-semibold text-blue-300 mb-4" data-i18n="productContent">Nội dung bán hàng</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productName">Tên sản phẩm</label>
+            <input id="pr_name" data-i18n-placeholder="productNamePlaceholder" placeholder="AI tự lấy từ link nếu để trống" class="w-full glass-input rounded-lg px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productAudience">Khách hàng mục tiêu</label>
+            <input id="pr_audience" value="Người mua hàng online" class="w-full glass-input rounded-lg px-4 py-2.5 text-sm text-gray-100">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productDetails">Điểm nổi bật, giá hoặc ưu đãi</label>
+          <textarea id="pr_details" rows="3" data-i18n-placeholder="productDetailsPlaceholder" placeholder="Tùy chọn. Chỉ nhập thông tin đúng để AI không tự bịa..." class="w-full glass-input rounded-lg px-4 py-2.5 text-sm resize-y text-gray-100 placeholder-gray-600"></textarea>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productTone">Phong cách giới thiệu</label>
+            <select id="pr_tone" class="w-full glass-input rounded-lg px-3 py-2.5 text-sm text-gray-100">
+              <option value="Năng động, bắt trend, phù hợp TikTok và Reels">TikTok / Reels năng động</option>
+              <option value="Cao cấp, tối giản, hình ảnh sang trọng">Cao cấp, sang trọng</option>
+              <option value="Gần gũi như người dùng thật đang review">Review chân thực</option>
+              <option value="Rõ ràng, tin cậy, tập trung vào lợi ích">Bán hàng trực tiếp</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productCta">Lời kêu gọi hành động</label>
+            <input id="pr_cta" value="Tìm hiểu và đặt mua sản phẩm ngay hôm nay" class="w-full glass-input rounded-lg px-4 py-2.5 text-sm text-gray-100">
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 mb-4">
+        <h2 class="text-lg font-semibold text-blue-300 mb-4" data-i18n="productOutput">Đầu ra video</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productLength">Độ dài</label>
+            <select id="pr_length" class="w-full glass-input rounded-lg px-3 py-2.5 text-sm text-gray-100">
+              <option value="3x5">15 giây · 3 cảnh</option>
+              <option value="5x6">30 giây · 5 cảnh</option>
+              <option value="6x7">42 giây · 6 cảnh</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="resolution">Độ phân giải</label>
+            <select id="pr_resolution" class="w-full glass-input rounded-lg px-3 py-2.5 text-sm text-gray-100">
+              <option value="768x1152" data-i18n="resPortrait">Dọc 9:16</option>
+              <option value="1152x768" data-i18n="resLandscape">Ngang 16:9</option>
+              <option value="1024x1024" data-i18n="resSquare">Vuông 1:1</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="speechRate">Tốc độ nói</label>
+            <select id="pr_rate" class="w-full glass-input rounded-lg px-3 py-2.5 text-sm text-gray-100">
+              <option value="-10%">-10%</option>
+              <option value="+0%" selected data-i18n="rateNormal">Bình thường</option>
+              <option value="+10%">+10%</option>
+              <option value="+20%">+20%</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5" data-i18n="voiceRole">Giọng đọc</label>
+            <div class="voice-selector" id="pr_voice_selector" role="button" tabindex="0" onclick="openVoicePicker('pr')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVoicePicker('pr');}">
+              <span class="vs-main">
+                <span class="vs-name" id="pr_voice_name">HoaiMy</span>
+                <span class="vs-desc" id="pr_voice_desc">vi-VN · Nữ</span>
+              </span>
+              <span class="vs-arrow">▾</span>
+              <input type="hidden" id="pr_voice" value="vi-VN-HoaiMyNeural">
+            </div>
+          </div>
+          <div class="flex items-center gap-6 pt-6">
+            <label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+              <input type="checkbox" id="pr_audio_enabled" checked class="rounded bg-gray-800 border-gray-600">
+              <span data-i18n="enableNarration">Bật lồng tiếng</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+              <input type="checkbox" id="pr_subtitle_enabled" checked class="rounded bg-gray-800 border-gray-600">
+              <span data-i18n="enableSubtitle">Bật phụ đề</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between px-1 py-2 mb-4">
+        <p class="text-xs text-gray-500 leading-relaxed mr-3 watermark-promo"></p>
+        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0" title="Video Watermark">
+          <input type="checkbox" class="watermark-toggle sr-only peer" onchange="toggleWatermark(this)">
+          <div class="w-10 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-300 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+
+      <button id="btn-product" onclick="submitProduct()" class="w-full py-3.5 rounded-xl text-base font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed glow-btn" data-i18n="productGenerate">Phân tích và tạo video sản phẩm</button>
+    </div>
+
     <div id="form-poetry" class="hidden">
       <div class="glass-card rounded-2xl p-6 mb-4">
         <h2 class="text-lg font-semibold text-blue-300 mb-4" data-i18n="poetrySettings">诗词设置</h2>
@@ -1486,8 +3046,54 @@
       <p class="text-gray-500 text-sm" data-i18n="loading">加载中...</p>
     </div>
   </div>
+  </section>
 
   <!-- ═══════════ Progress Panel ═══════════ -->
+  <aside class="studio-console" aria-label="Trạng thái tạo video">
+  <div class="console-idle">
+    <div class="console-heading">
+      <span class="console-label"><i data-lucide="radio-tower"></i>Live engine</span>
+      <span class="console-state"><span class="studio-status-dot"></span>READY</span>
+    </div>
+    <div class="signal-stage">
+      <div class="signal-scan"></div>
+      <div class="idle-symbols" aria-hidden="true">
+        <span class="idle-symbol heart" style="--idle-start:8%;--idle-mid-a:34%;--idle-mid-b:16%;--idle-mid-c:45%;--idle-end:28%;--idle-delay:-1s;--idle-duration:6.8s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile" style="--idle-start:18%;--idle-mid-a:8%;--idle-mid-b:52%;--idle-mid-c:30%;--idle-end:76%;--idle-delay:-5s;--idle-duration:9.2s"><i data-lucide="smile"></i></span>
+        <span class="idle-symbol heart small" style="--idle-start:30%;--idle-mid-a:58%;--idle-mid-b:24%;--idle-mid-c:50%;--idle-end:12%;--idle-delay:-3s;--idle-duration:7.4s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile small" style="--idle-start:42%;--idle-mid-a:18%;--idle-mid-b:64%;--idle-mid-c:34%;--idle-end:68%;--idle-delay:-8s;--idle-duration:10s"><i data-lucide="grin"></i></span>
+        <span class="idle-symbol heart large" style="--idle-start:55%;--idle-mid-a:82%;--idle-mid-b:46%;--idle-mid-c:76%;--idle-end:25%;--idle-delay:-6s;--idle-duration:8.6s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile small" style="--idle-start:67%;--idle-mid-a:42%;--idle-mid-b:86%;--idle-mid-c:57%;--idle-end:88%;--idle-delay:-2s;--idle-duration:6.5s"><i data-lucide="smile"></i></span>
+        <span class="idle-symbol heart tiny" style="--idle-start:78%;--idle-mid-a:94%;--idle-mid-b:61%;--idle-mid-c:90%;--idle-end:50%;--idle-delay:-10s;--idle-duration:11s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile" style="--idle-start:88%;--idle-mid-a:65%;--idle-mid-b:92%;--idle-mid-c:54%;--idle-end:70%;--idle-delay:-4s;--idle-duration:7.8s"><i data-lucide="laugh"></i></span>
+        <span class="idle-symbol heart" style="--idle-start:95%;--idle-mid-a:72%;--idle-mid-b:96%;--idle-mid-c:66%;--idle-end:40%;--idle-delay:-7s;--idle-duration:9.8s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile tiny" style="--idle-start:14%;--idle-mid-a:44%;--idle-mid-b:9%;--idle-mid-c:60%;--idle-end:82%;--idle-delay:-11s;--idle-duration:12s"><i data-lucide="smile-plus"></i></span>
+        <span class="idle-symbol heart small" style="--idle-start:48%;--idle-mid-a:27%;--idle-mid-b:74%;--idle-mid-c:36%;--idle-end:92%;--idle-delay:-5.5s;--idle-duration:6.2s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile" style="--idle-start:73%;--idle-mid-a:51%;--idle-mid-b:84%;--idle-mid-c:42%;--idle-end:15%;--idle-delay:-9s;--idle-duration:8.1s"><i data-lucide="grin"></i></span>
+        <span class="idle-symbol heart large" style="--idle-start:26%;--idle-mid-a:6%;--idle-mid-b:39%;--idle-mid-c:15%;--idle-end:60%;--idle-delay:-4.5s;--idle-duration:12.5s;--idle-opacity:0.72"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile" style="--idle-start:60%;--idle-mid-a:88%;--idle-mid-b:55%;--idle-mid-c:80%;--idle-end:35%;--idle-delay:-1.5s;--idle-duration:9.4s"><i data-lucide="smile"></i></span>
+        <span class="idle-symbol heart tiny" style="--idle-start:84%;--idle-mid-a:58%;--idle-mid-b:90%;--idle-mid-c:47%;--idle-end:5%;--idle-delay:-6.5s;--idle-duration:7s"><i data-lucide="heart"></i></span>
+        <span class="idle-symbol smile small" style="--idle-start:38%;--idle-mid-a:68%;--idle-mid-b:31%;--idle-mid-c:72%;--idle-end:78%;--idle-delay:-2.8s;--idle-duration:10.8s"><i data-lucide="laugh"></i></span>
+        <span class="idle-symbol cyan tiny" style="--idle-start:6%;--idle-mid-a:28%;--idle-mid-b:12%;--idle-mid-c:38%;--idle-end:52%;--idle-delay:-4s;--idle-duration:8.8s"><i data-lucide="sparkles"></i></span>
+      </div>
+      <div class="signal-core">
+        <i data-lucide="sparkles"></i>
+        <strong>Chờ tác vụ</strong>
+        <span>ENGINE.IDLE / 00:00:00</span>
+      </div>
+      <div class="idle-signature" aria-label="Nguyễn Phước Đại đẹp trai">
+        <div class="idle-signature-track">
+          <span><i data-lucide="heart"></i>Nguyễn Phước Đại đẹp trai</span>
+          <span aria-hidden="true"><i data-lucide="heart"></i>Nguyễn Phước Đại đẹp trai</span>
+        </div>
+      </div>
+    </div>
+    <div class="console-log" aria-label="Trạng thái hệ thống">
+      <span>video.pipeline <b class="ok">ready</b></span>
+      <span>audio.engine <b class="ok">ready</b></span>
+      <span>subtitle.render <b class="ok">ready</b></span>
+    </div>
+  </div>
   <div id="progress-panel" class="hidden glass-card rounded-2xl p-6 mt-6">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-blue-300" data-i18n="progress">生成进度</h2>
@@ -1519,40 +3125,96 @@
       <video id="result-video" controls class="w-full rounded-lg max-h-96"></video>
     </div>
   </div>
-
-<footer class="text-center pb-8">
-  <div class="border-t border-white/[0.04] pt-8 mt-4">
-    <p class="text-xs text-gray-600 mb-3">Tài nguyên</p>
-    <div class="flex justify-center flex-wrap gap-x-5 gap-y-2 text-xs">
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="text-gray-500 hover:text-gray-300 transition-colors">🏠 Trang dự án</a>
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="text-amber-400/70 hover:text-amber-300 transition-colors">🎬 Demo</a>
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="text-gray-500 hover:text-gray-300 transition-colors">📖 Hướng dẫn sử dụng</a>
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO/issues" target="_blank" rel="noopener" class="text-gray-500 hover:text-gray-300 transition-colors">❓ Câu hỏi thường gặp</a>
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="text-gray-500 hover:text-gray-300 transition-colors">📋 Tài liệu API</a>
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="text-gray-500 hover:text-gray-300 transition-colors">🎯 Trường hợp sử dụng</a>
-      <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener" class="text-gray-500 hover:text-gray-300 transition-colors">📖 GitHub</a>
+  <div id="code-terminal" class="code-terminal" aria-hidden="true">
+    <div class="terminal-head">
+      <span class="terminal-title"><i data-lucide="square-terminal"></i>Process stream</span>
+      <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    </div>
+    <div class="terminal-stream">
+      <div id="terminal-lines" class="terminal-lines"></div>
+      <div class="terminal-command">root@tool-video:~$ watch pipeline</div>
     </div>
   </div>
-</footer>
-</div>
-
-<!-- Right sidebar -->
-<aside class="hidden lg:block sticky top-[120px] self-start w-[115px] shrink-0 mt-8">
-  <div class="sidebar-card">
-    <div class="stitle">🔗 Lối tắt</div>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">🎬 Demo</a>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">📖 Mẹo prompt</a>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">📚 Tổng quan mô hình</a>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">📘 Gọi API</a>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO/issues" target="_blank" rel="noopener">❓ Câu hỏi thường gặp</a>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">📋 Tài liệu API</a>
-    <a href="https://github.com/phuocdai2004/TOOL-VIDEO" target="_blank" rel="noopener">🎯 Trường hợp sử dụng</a>
+  </aside>
   </div>
-</aside>
+
+</div>
 
 </div>
 
 <script>
+const TERMINAL_STREAM_EVENTS = [
+  { code: 'pipeline.watch(task)', tone: 'is-cyan' },
+  { code: 'scene.queue.sync()', tone: 'is-dim' },
+  { code: 'frame.buffer.inspect()', tone: 'is-dim' },
+  { code: 'model.poll_status()', tone: 'is-cyan' },
+  { code: 'render.progress.emit()', tone: 'is-lime' },
+  { code: 'artifact.index.refresh()', tone: 'is-dim' },
+  { code: 'audio.timeline.align()', tone: 'is-cyan' },
+  { code: 'subtitle.track.prepare()', tone: 'is-dim' },
+  { code: 'worker.heartbeat()', tone: 'is-lime' },
+  { code: 'video.stream.await()', tone: 'is-cyan' }
+];
+
+let terminalStreamIndex = 0;
+
+function pushTerminalStreamLine() {
+  const host = document.getElementById('terminal-lines');
+  const progressPanel = document.getElementById('progress-panel');
+  if (!host || !progressPanel || progressPanel.classList.contains('hidden')) return;
+
+  const event = TERMINAL_STREAM_EVENTS[terminalStreamIndex % TERMINAL_STREAM_EVENTS.length];
+  const pct = (document.getElementById('progress-pct') || {}).textContent || '0%';
+  const taskRef = typeof currentTaskId === 'string' && currentTaskId
+    ? currentTaskId.slice(0, 8)
+    : 'active';
+  const values = [pct, 'RUNNING', 'task:' + taskRef, 'OK'];
+  const value = values[terminalStreamIndex % values.length];
+  const now = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+
+  const line = document.createElement('div');
+  line.className = 'terminal-line ' + event.tone;
+
+  const time = document.createElement('span');
+  time.className = 'term-time';
+  time.textContent = now;
+
+  const prompt = document.createElement('span');
+  prompt.className = 'term-prompt';
+  prompt.textContent = '›';
+
+  const code = document.createElement('span');
+  code.className = 'term-code';
+  code.textContent = event.code;
+
+  const status = document.createElement('span');
+  status.className = 'term-value';
+  status.textContent = value;
+
+  line.append(time, prompt, code, status);
+  host.appendChild(line);
+  terminalStreamIndex += 1;
+
+  while (host.children.length > 30) host.firstElementChild.remove();
+}
+
+function tickTerminalStream() {
+  const host = document.getElementById('terminal-lines');
+  const progressPanel = document.getElementById('progress-panel');
+  if (!host || !progressPanel || progressPanel.classList.contains('hidden')) return;
+  if (host.children.length === 0) {
+    for (let i = 0; i < 10; i += 1) pushTerminalStreamLine();
+    return;
+  }
+  pushTerminalStreamLine();
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.lucide) window.lucide.createIcons();
+  tickTerminalStream();
+  window.setInterval(tickTerminalStream, 720);
+});
+
 // ═══════════════════════════════════════════════════
 // GA4 埋点（固定 Measurement ID，统一收集用户操作数据）
 // ═══════════════════════════════════════════════════
@@ -1631,6 +3293,19 @@ window.addEventListener('unhandledrejection', function(e) {
 
 const T = {
   zh: {
+    authSubtitle: '登录以管理并保护你的视频。', authLogin: '登录', authRegister: '注册',
+    authEmail: '邮箱', authPassword: '密码', authName: '显示名称',
+    authPasswordHint: '至少 8 个字符，并同时包含字母和数字。', authCreateAccount: '创建账号',
+    authFirstAdmin: '第一个账号将自动成为超级管理员。', authLogout: '退出登录',
+    authForgotPassword: '忘记密码？', authForgotTitle: '找回密码', authForgotHint: '输入账号邮箱以接收重置链接。',
+    authBackToLogin: '返回登录', authSendResetLink: '发送重置链接', authForgotSent: '如果邮箱存在，重置链接已发送。',
+    authResetTitle: '设置新密码', authNewPassword: '新密码', authConfirmPassword: '确认密码',
+    authResetPassword: '重置密码', authPasswordMismatch: '两次输入的密码不一致', authResetSuccess: '密码已重置，请重新登录。',
+    authGenericError: '无法完成身份验证', authSessionExpired: '登录已过期，请重新登录。',
+    adminTitle: '用户管理', adminUsers: '用户', adminTasks: '任务', adminLegacy: '旧任务',
+    adminRole: '角色', adminStatus: '状态', adminSave: '保存', adminActive: '正常',
+    adminDisabled: '已锁定', adminLoadFailed: '无法加载管理数据', adminSaved: '账号已更新',
+    adminDelete: '删除账号', adminDeleteConfirm: '确定删除账号 {email}？视频和任务仍会保留。', adminDeleted: '账号已删除',
     subtitle: 'AI 视频，一键生成',
     apiKeyTitle: 'API Key 配置', apiKeyNotConfigured: '未配置', apiKeyConfigured: '已配置',
     apiKeyPlaceholder: '输入 Agnes API Key', apiKeyMasked: '已配置 (●●●)', save: '保存',
@@ -1706,7 +3381,7 @@ const T = {
     statusCompleted: '已完成', statusRunning: '进行中', statusFailed: '失败', statusPending: '待处理', statusQueued: '排队中',
     btnView: '查看', btnViewProgress: '查看进度', btnResume: '续传', btnStop: '中断',
     sceneUnit: '个场景', paraUnit: '段',
-    typeSimple: '简单', typeCreative: '创意', typeManuscript: '稿件', typeImage: '图片',
+    typeSimple: '简单', typeCreative: '创意', typeManuscript: '稿件', typeImage: '图片', typeProduct: '商品',
     stopConfirm: '确定要中断当前任务吗？中断后可到任务列表续传。',
     stopConfirmById: '确定要中断该任务吗？中断后可续传。',
     stopped: '任务已中断，可在任务列表中续传', stoppedById: '任务已中断',
@@ -1727,6 +3402,25 @@ const T = {
     domainSaved: '已保存',
     domainSaveFailed: '保存失败',
     ttPoetry: '诗词视频', poetrySettings: '诗词设置',
+    ttProduct: '商品视频', productSettings: '商品来源',
+    productSourceHint: '先从链接获取并显示商品图片，再让 Gemini 看图并编写视频脚本。',
+    geminiConfigTitle: 'Gemini 商品分析', geminiKeyPlaceholder: 'Gemini API Key', geminiSave: '保存', geminiClear: '删除 Gemini API Key',
+    geminiReady: '已就绪', geminiMissing: '未配置', geminiEnv: '环境变量已配置', geminiSaved: 'Gemini 配置已保存', geminiCleared: 'Gemini 配置已删除',
+    geminiKeyRequired: '请输入 Gemini API Key', geminiRequired: '请先配置 Gemini API Key', geminiSaveFailed: '保存 Gemini 配置失败', geminiClearFailed: '删除 Gemini 配置失败', geminiClearConfirm: '删除已保存的 Gemini API Key？',
+    productLink: '商品链接', productLinkPlaceholder: 'https://example.com/product', productInspect: '从链接获取图片',
+    orUploadImage: '或直接上传图片', productImage: '商品图片', productImageHint: 'JPG、PNG、WEBP 或 AVIF，最大 12 MB',
+    productContent: '营销内容', productName: '商品名称', productNamePlaceholder: '留空则由 AI 从链接识别',
+    productAudience: '目标客户', productDetails: '卖点、价格或优惠', productDetailsPlaceholder: '可选。只填写真实信息，避免 AI 编造。',
+    productTone: '介绍风格', productCta: '行动号召', productOutput: '视频输出', productLength: '视频长度',
+    productAnalysisTitle: 'Gemini 验证结果', verifiedFacts: '有证据的信息', missingInfo: '尚未确认的信息',
+    factSourceImage: '图片', factSourceLink: '链接', factSourceUser: '用户', noVerifiedFacts: '没有找到有证据的信息', noMissingInfo: '没有标记缺失信息',
+    productScript: 'Gemini 建议脚本', productScriptHint: '脚本仅使用有证据的信息...', productAnalysisGuard: '生成视频前请检查脚本。系统不会把缺少证据的数据传给场景生成。',
+    productAnalysisRequired: '请先显示商品图片，再让 Gemini 看图生成脚本', productScriptRequired: '请检查并填写商品脚本',
+    productGenerate: '从已检查脚本生成视频', productInspecting: '正在获取图片...', productSourceReady: '商品图片已显示',
+    productAnalyze: 'Gemini 看图并编写脚本', productAnalyzing: 'Gemini 正在查看图片...', productAnalysisReady: 'Gemini 已生成脚本', productAnalysisFailed: 'Gemini 分析失败',
+    productLinkRequired: '请粘贴商品链接或上传商品图片', productLinkOnlyRequired: '请粘贴商品链接', productSourceFailed: '无法读取商品链接', productImageSelected: '已选择图片',
+    productImageRequired: '请先获取或上传商品图片，并确保图片已经显示', productImageNotFound: '链接页面没有提供可读取的商品图片', productImageLoadFailed: '商品图片无法显示，请直接上传或粘贴图片',
+    productPasteImage: '从剪贴板粘贴图片', productPasteSuccess: '已从剪贴板添加图片', productPasteHint: '请先在商品页面复制图片，然后返回并按 Ctrl+V',
     poemLabel: '古诗原文', poemPlaceholder: '输入完整古诗原文，例如：春眠不觉晓，处处闻啼鸟...',
     poemHint: '可多段；诗句间用换行或标点自然分隔。AI 会按诗意拆分为若干场景。',
     scenePromptsOptional: '分镜描述（可选）', scenePromptsPlaceholder: '格式：原诗句 | 画面描述（每行一个场景）',
@@ -1781,6 +3475,19 @@ const T = {
     taskStarting: '任务正在启动...',
   },
   vi: {
+    authSubtitle: 'Đăng nhập để quản lý và bảo vệ video của bạn.', authLogin: 'Đăng nhập', authRegister: 'Đăng ký',
+    authEmail: 'Email', authPassword: 'Mật khẩu', authName: 'Tên hiển thị',
+    authPasswordHint: 'Tối thiểu 8 ký tự, gồm cả chữ và số.', authCreateAccount: 'Tạo tài khoản',
+    authFirstAdmin: 'Tài khoản đầu tiên sẽ tự động là superadmin.', authLogout: 'Đăng xuất',
+    authForgotPassword: 'Quên mật khẩu?', authForgotTitle: 'Khôi phục mật khẩu', authForgotHint: 'Nhập email tài khoản để nhận liên kết đặt lại mật khẩu.',
+    authBackToLogin: 'Quay lại đăng nhập', authSendResetLink: 'Gửi liên kết khôi phục', authForgotSent: 'Nếu email tồn tại, liên kết đặt lại mật khẩu đã được gửi.',
+    authResetTitle: 'Đặt mật khẩu mới', authNewPassword: 'Mật khẩu mới', authConfirmPassword: 'Nhập lại mật khẩu',
+    authResetPassword: 'Đặt lại mật khẩu', authPasswordMismatch: 'Hai mật khẩu không trùng nhau', authResetSuccess: 'Đã đặt lại mật khẩu. Hãy đăng nhập lại.',
+    authGenericError: 'Không thể xác thực', authSessionExpired: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
+    adminTitle: 'Quản lý người dùng', adminUsers: 'Người dùng', adminTasks: 'Tác vụ', adminLegacy: 'Tác vụ cũ',
+    adminRole: 'Vai trò', adminStatus: 'Trạng thái', adminSave: 'Lưu', adminActive: 'Hoạt động',
+    adminDisabled: 'Đã khóa', adminLoadFailed: 'Không thể tải dữ liệu quản trị', adminSaved: 'Đã cập nhật tài khoản',
+    adminDelete: 'Xóa tài khoản', adminDeleteConfirm: 'Xóa tài khoản {email}? Video và tác vụ vẫn được giữ lại.', adminDeleted: 'Đã xóa tài khoản',
     subtitle: 'Video AI, tạo chỉ với một lần bấm',
     apiKeyTitle: 'Cấu hình API Key', apiKeyNotConfigured: 'Chưa cấu hình', apiKeyConfigured: 'Đã cấu hình',
     apiKeyPlaceholder: 'Nhập Agnes API Key', apiKeyMasked: 'Đã cấu hình (●●●)', save: 'Lưu',
@@ -1846,7 +3553,7 @@ const T = {
     artifact: 'Sản phẩm', paragraphCount: 'Số đoạn',
     statusCompleted: 'Hoàn tất', statusRunning: 'Đang chạy', statusFailed: 'Thất bại', statusPending: 'Chờ xử lý', statusQueued: 'Đang xếp hàng',
     btnView: 'Xem', btnViewProgress: 'Xem tiến trình', btnResume: 'Tiếp tục', btnStop: 'Dừng',
-    sceneUnit: ' cảnh', paraUnit: ' đoạn', typeSimple: 'Đơn giản', typeCreative: 'Sáng tạo', typeManuscript: 'Bài viết', typeImage: 'Ảnh', typeAnchor: 'Người dẫn',
+    sceneUnit: ' cảnh', paraUnit: ' đoạn', typeSimple: 'Đơn giản', typeCreative: 'Sáng tạo', typeManuscript: 'Bài viết', typeImage: 'Ảnh', typeAnchor: 'Người dẫn', typeProduct: 'Sản phẩm',
     stopConfirm: 'Dừng tác vụ hiện tại? Bạn có thể tiếp tục từ danh sách tác vụ.', stopConfirmById: 'Dừng tác vụ này? Có thể tiếp tục sau.',
     stopped: 'Tác vụ đã dừng, có thể tiếp tục trong danh sách', stoppedById: 'Tác vụ đã dừng',
     enterApiKey: 'Vui lòng nhập API Key', enterPrompt: 'Vui lòng nhập mô tả video', enterIdea: 'Vui lòng nhập mô tả ý tưởng', enterText: 'Vui lòng nhập nội dung',
@@ -1857,6 +3564,25 @@ const T = {
     gotoList: 'Tới danh sách', reconnecting: 'Mất kết nối, đang thử lại...',
     domainTitle: 'Cấu hình domain Agnes', domainHint: 'Chọn domain truy cập Agnes API. Nếu ở Trung Quốc đại lục, .cn thường ổn định hơn.', domainComLabel: 'Quốc tế', domainCnLabel: 'Trung Quốc đại lục', domainSaved: 'Đã lưu', domainSaveFailed: 'Lưu thất bại',
     ttPoetry: 'Video thơ', poetrySettings: 'Thiết lập thơ', poemLabel: 'Nguyên văn bài thơ', poemPlaceholder: 'Nhập đầy đủ bài thơ...', poemHint: 'Có thể nhiều khổ; dùng xuống dòng hoặc dấu câu để tách tự nhiên. AI sẽ chia cảnh theo ý thơ.',
+    ttProduct: 'Video sản phẩm', productSettings: 'Nguồn sản phẩm',
+    productSourceHint: 'Lấy và hiện ảnh sản phẩm trước, sau đó Gemini mới nhìn ảnh và viết kịch bản video.',
+    geminiConfigTitle: 'Gemini phân tích sản phẩm', geminiKeyPlaceholder: 'Gemini API Key', geminiSave: 'Lưu', geminiClear: 'Xóa Gemini API Key',
+    geminiReady: 'Đã sẵn sàng', geminiMissing: 'Chưa cấu hình', geminiEnv: 'Đã cấu hình bằng biến môi trường', geminiSaved: 'Đã lưu cấu hình Gemini', geminiCleared: 'Đã xóa cấu hình Gemini',
+    geminiKeyRequired: 'Hãy nhập Gemini API Key', geminiRequired: 'Hãy cấu hình Gemini API Key trước', geminiSaveFailed: 'Không lưu được cấu hình Gemini', geminiClearFailed: 'Không xóa được cấu hình Gemini', geminiClearConfirm: 'Xóa Gemini API Key đã lưu?',
+    productLink: 'Link sản phẩm', productLinkPlaceholder: 'https://shopee.vn/...', productInspect: 'Lấy ảnh từ link',
+    orUploadImage: 'hoặc tải ảnh trực tiếp', productImage: 'Ảnh sản phẩm', productImageHint: 'JPG, PNG, WEBP hoặc AVIF · tối đa 12 MB',
+    productContent: 'Nội dung bán hàng', productName: 'Tên sản phẩm', productNamePlaceholder: 'AI tự lấy từ link nếu để trống',
+    productAudience: 'Khách hàng mục tiêu', productDetails: 'Điểm nổi bật, giá hoặc ưu đãi', productDetailsPlaceholder: 'Tùy chọn. Chỉ nhập thông tin đúng để AI không tự bịa.',
+    productTone: 'Phong cách giới thiệu', productCta: 'Lời kêu gọi hành động', productOutput: 'Đầu ra video', productLength: 'Độ dài',
+    productAnalysisTitle: 'Kết quả Gemini đã kiểm chứng', verifiedFacts: 'Thông tin có bằng chứng', missingInfo: 'Thông tin chưa xác định',
+    factSourceImage: 'Ảnh', factSourceLink: 'Link', factSourceUser: 'Bạn nhập', noVerifiedFacts: 'Chưa tìm thấy thông tin có bằng chứng', noMissingInfo: 'Không có mục nào bị đánh dấu thiếu',
+    productScript: 'Kịch bản Gemini đề xuất', productScriptHint: 'Kịch bản chỉ dùng dữ liệu có bằng chứng...', productAnalysisGuard: 'Hãy kiểm tra kịch bản trước khi tạo video. Hệ thống sẽ không chuyển dữ liệu thiếu bằng chứng sang bước tạo cảnh.',
+    productAnalysisRequired: 'Hãy hiện ảnh sản phẩm rồi cho Gemini nhìn ảnh và tạo kịch bản trước', productScriptRequired: 'Hãy kiểm tra và điền kịch bản sản phẩm',
+    productGenerate: 'Tạo video từ kịch bản đã kiểm tra', productInspecting: 'Đang lấy ảnh...', productSourceReady: 'Đã hiện ảnh sản phẩm',
+    productAnalyze: 'Gemini nhìn ảnh & viết kịch bản', productAnalyzing: 'Gemini đang nhìn ảnh...', productAnalysisReady: 'Gemini đã tạo kịch bản', productAnalysisFailed: 'Gemini phân tích thất bại',
+    productLinkRequired: 'Hãy dán link hoặc tải ảnh sản phẩm lên', productLinkOnlyRequired: 'Hãy dán link sản phẩm', productSourceFailed: 'Không thể đọc link sản phẩm', productImageSelected: 'Đã chọn ảnh',
+    productImageRequired: 'Hãy lấy hoặc tải ảnh sản phẩm và chờ ảnh hiển thị trước', productImageNotFound: 'Trang sản phẩm không cung cấp ảnh có thể đọc', productImageLoadFailed: 'Ảnh sản phẩm không hiển thị được, hãy tải hoặc dán ảnh trực tiếp',
+    productPasteImage: 'Dán ảnh từ clipboard', productPasteSuccess: 'Đã nhận ảnh từ clipboard', productPasteHint: 'Hãy sao chép hình ảnh ở trang sản phẩm, quay lại đây rồi nhấn Ctrl+V',
     scenePromptsOptional: 'Mô tả phân cảnh (tùy chọn)', scenePromptsPlaceholder: 'Định dạng: câu thơ | mô tả hình ảnh (mỗi dòng một cảnh)',
     scenePromptsHint: 'Tùy chọn. Mỗi dòng một cảnh theo định dạng cố định "câu thơ | mô tả hình ảnh". Có thể để trống để hệ thống tự tạo, hoặc dùng prompt bên dưới với AI khác rồi dán kết quả vào đây.',
     scenePromptsExample: 'Ví dụ: Sáng xuân chim hót... | Buổi sáng mùa xuân có sương nhẹ, chim hót trên cành', scenePromptTool: 'Dùng AI khác tạo phân cảnh', showPrompt: 'Xem prompt',
@@ -1873,6 +3599,19 @@ const T = {
     deleteArtifactConfirm: 'Xóa sản phẩm này? Các sản phẩm phía sau sẽ bị xóa theo và trạng thái tác vụ sẽ lùi lại.', willDelete: 'File sẽ xóa', willResetSteps: 'Bước sẽ đặt lại', artifactDeleted: 'Đã xóa sản phẩm', artifactDeleteFailed: 'Xóa thất bại', clickToPreview: 'Bấm để xem trước', 'delete': 'Xóa', taskStarting: 'Tác vụ đang khởi động...',
   },
   en: {
+    authSubtitle: 'Sign in to manage and protect your videos.', authLogin: 'Sign in', authRegister: 'Register',
+    authEmail: 'Email', authPassword: 'Password', authName: 'Display name',
+    authPasswordHint: 'At least 8 characters with both letters and numbers.', authCreateAccount: 'Create account',
+    authFirstAdmin: 'The first account automatically becomes superadmin.', authLogout: 'Sign out',
+    authForgotPassword: 'Forgot password?', authForgotTitle: 'Recover password', authForgotHint: 'Enter your account email to receive a reset link.',
+    authBackToLogin: 'Back to sign in', authSendResetLink: 'Send recovery link', authForgotSent: 'If the email exists, a reset link has been sent.',
+    authResetTitle: 'Set a new password', authNewPassword: 'New password', authConfirmPassword: 'Confirm password',
+    authResetPassword: 'Reset password', authPasswordMismatch: 'Passwords do not match', authResetSuccess: 'Password reset. Please sign in again.',
+    authGenericError: 'Authentication failed', authSessionExpired: 'Your session expired. Please sign in again.',
+    adminTitle: 'User management', adminUsers: 'Users', adminTasks: 'Tasks', adminLegacy: 'Legacy tasks',
+    adminRole: 'Role', adminStatus: 'Status', adminSave: 'Save', adminActive: 'Active',
+    adminDisabled: 'Disabled', adminLoadFailed: 'Could not load admin data', adminSaved: 'Account updated',
+    adminDelete: 'Delete account', adminDeleteConfirm: 'Delete {email}? Videos and tasks will be kept.', adminDeleted: 'Account deleted',
     subtitle: 'AI Video, One Click',
     apiKeyTitle: 'API Key Configuration', apiKeyNotConfigured: 'Not configured', apiKeyConfigured: 'Configured',
     apiKeyPlaceholder: 'Enter Agnes API Key', apiKeyMasked: 'Configured (●●●)', save: 'Save',
@@ -1944,7 +3683,7 @@ const T = {
     statusCompleted: 'Completed', statusRunning: 'Running', statusFailed: 'Failed', statusPending: 'Pending', statusQueued: 'Queued',
     btnView: 'View', btnViewProgress: 'Progress', btnResume: 'Resume', btnStop: 'Stop',
     sceneUnit: ' scenes', paraUnit: ' paragraphs',
-    typeSimple: 'Simple', typeCreative: 'Creative', typeManuscript: 'Article', typeImage: 'Image',
+    typeSimple: 'Simple', typeCreative: 'Creative', typeManuscript: 'Article', typeImage: 'Image', typeProduct: 'Product',
     stopConfirm: 'Stop the current task? It can be resumed from the task list.',
     stopConfirmById: 'Stop this task? It can be resumed later.',
     stopped: 'Task stopped, resumable from task list', stoppedById: 'Task stopped',
@@ -1965,6 +3704,25 @@ const T = {
     domainSaved: 'Saved',
     domainSaveFailed: 'Save failed',
     ttPoetry: 'Poetry Video', poetrySettings: 'Poetry Settings',
+    ttProduct: 'Product Video', productSettings: 'Product Source',
+    productSourceHint: 'Fetch and display the product image first, then let Gemini view it and write the video script.',
+    geminiConfigTitle: 'Gemini product analysis', geminiKeyPlaceholder: 'Gemini API Key', geminiSave: 'Save', geminiClear: 'Delete Gemini API Key',
+    geminiReady: 'Ready', geminiMissing: 'Not configured', geminiEnv: 'Configured by environment', geminiSaved: 'Gemini configuration saved', geminiCleared: 'Gemini configuration deleted',
+    geminiKeyRequired: 'Enter a Gemini API Key', geminiRequired: 'Configure a Gemini API Key first', geminiSaveFailed: 'Could not save Gemini configuration', geminiClearFailed: 'Could not delete Gemini configuration', geminiClearConfirm: 'Delete the saved Gemini API Key?',
+    productLink: 'Product Link', productLinkPlaceholder: 'https://example.com/product', productInspect: 'Fetch image from link',
+    orUploadImage: 'or upload an image', productImage: 'Product Image', productImageHint: 'JPG, PNG, WEBP, or AVIF · max 12 MB',
+    productContent: 'Marketing Content', productName: 'Product Name', productNamePlaceholder: 'AI detects it from the link when left blank',
+    productAudience: 'Target Audience', productDetails: 'Highlights, Price, or Offer', productDetailsPlaceholder: 'Optional. Enter verified details only so AI does not invent claims.',
+    productTone: 'Presentation Style', productCta: 'Call to Action', productOutput: 'Video Output', productLength: 'Length',
+    productAnalysisTitle: 'Gemini verified result', verifiedFacts: 'Evidence-backed facts', missingInfo: 'Unverified information',
+    factSourceImage: 'Image', factSourceLink: 'Link', factSourceUser: 'User', noVerifiedFacts: 'No evidence-backed facts found', noMissingInfo: 'No missing information flagged',
+    productScript: 'Gemini suggested script', productScriptHint: 'Script using evidence-backed data only...', productAnalysisGuard: 'Review the script before generating. Unsupported data is not passed to scene generation.',
+    productAnalysisRequired: 'Display the product image, then let Gemini view it and create the script first', productScriptRequired: 'Review and enter the product script',
+    productGenerate: 'Create video from reviewed script', productInspecting: 'Fetching image...', productSourceReady: 'Product image displayed',
+    productAnalyze: 'Gemini view image & write script', productAnalyzing: 'Gemini is viewing the image...', productAnalysisReady: 'Gemini script ready', productAnalysisFailed: 'Gemini analysis failed',
+    productLinkRequired: 'Paste a product link or upload a product image', productLinkOnlyRequired: 'Paste a product link', productSourceFailed: 'Could not read the product link', productImageSelected: 'Image selected',
+    productImageRequired: 'Fetch or upload a product image and wait until it is visible', productImageNotFound: 'The product page did not expose a readable image', productImageLoadFailed: 'The product image could not be displayed; upload or paste it directly',
+    productPasteImage: 'Paste image from clipboard', productPasteSuccess: 'Image added from clipboard', productPasteHint: 'Copy the image on the product page, return here, and press Ctrl+V',
     poemLabel: 'Poem Text', poemPlaceholder: 'Enter the full poem, e.g. 春眠不觉晓，处处闻啼鸟...', poemHint: 'Multiple stanzas allowed; separated by line breaks or punctuation. AI splits into scenes by meaning.',
     scenePromptsOptional: 'Scene Prompts (Optional)', scenePromptsPlaceholder: 'Format: verse | visual description (one scene per line)', scenePromptsHint: 'Optional. One scene per line, fixed format "verse | visual description". Two ways give identical results: ① leave empty and let the system generate; ② copy the prompt below to any AI, then paste the result back.', scenePromptsExample: 'e.g. Spring sleeps, unaware of dawn... | Misty spring morning, birds singing',
     scenePromptTool: 'Generate scenes with another AI', showPrompt: 'View prompt',
@@ -3335,6 +5093,11 @@ function applyLanguage(lang) {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     el.placeholder = t(el.dataset.i18nPlaceholder);
   });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const label = t(el.dataset.i18nTitle);
+    el.title = label;
+    el.setAttribute('aria-label', label);
+  });
     // 更新"用户要求"和"视觉风格"默认值（仅在用户未修改时）
   const updateDefault = (inputId, i18nKey) => {
     const el = document.getElementById(inputId);
@@ -3372,6 +5135,16 @@ let pollTimer = null;
 let isTaskRunning = false;
 let taskListTimer = null;
 let currentTaskType = 'creative'; // active task type tab
+let productPreviewObjectUrl = null;
+let geminiConfigured = false;
+let geminiConfigSource = 'none';
+let geminiModel = 'gemini-3.6-flash';
+let lastProductAnalysis = null;
+let lastProductSource = null;
+let productImageReady = false;
+let authUser = null;
+let authStatus = null;
+let appInitialized = false;
 
 // Step definitions per task type
 const STEPS = {
@@ -3380,6 +5153,20 @@ const STEPS = {
     { key: 'video_gen', labelKey: 'sStepVideoGen' },
   ],
   creative: [
+    { key: 'init', labelKey: 'cStepInit' },
+    { key: 'scene_config', labelKey: 'cStepSceneConfig' },
+    { key: 'image_analysis', labelKey: 'cStepImageAnalysis' },
+    { key: 'story', labelKey: 'cStepStory' },
+    { key: 'character_ref', labelKey: 'cStepCharacterRef' },
+    { key: 'script', labelKey: 'cStepScript' },
+    { key: 'end_frame_prompts', labelKey: 'cStepEndFramePrompts' },
+    { key: 'end_frame_gen', labelKey: 'cStepEndFrameGen' },
+    { key: 'video_gen', labelKey: 'cStepVideoGen' },
+    { key: 'audio', labelKey: 'cStepAudio' },
+    { key: 'subtitle', labelKey: 'cStepSubtitle' },
+    { key: 'concatenate', labelKey: 'cStepConcat' },
+  ],
+  product: [
     { key: 'init', labelKey: 'cStepInit' },
     { key: 'scene_config', labelKey: 'cStepSceneConfig' },
     { key: 'image_analysis', labelKey: 'cStepImageAnalysis' },
@@ -3423,9 +5210,333 @@ const STEPS = {
 // Init
 // ═══════════════════════════════════════════════════
 
-(async function init() {
-  try { currentLang = localStorage.getItem('lang') || 'vi'; } catch(e) { currentLang = 'vi'; }
-  try { applyLanguage(currentLang); } catch(e) { console.error('applyLanguage error:', e); }
+function showAuthMode(mode) {
+  const formModes = ['login', 'register', 'forgot', 'reset'];
+  formModes.forEach(formMode => {
+    document.getElementById(`auth-${formMode}-form`).classList.toggle('hidden', formMode !== mode);
+  });
+  const tabMode = mode === 'login' || mode === 'register';
+  document.getElementById('auth-tabs').classList.toggle('hidden', !tabMode);
+  document.getElementById('auth-tab-login').classList.toggle('active', mode === 'login');
+  document.getElementById('auth-tab-register').classList.toggle('active', mode === 'register');
+  const focusIds = {
+    login: 'auth-login-email',
+    register: 'auth-register-name',
+    forgot: 'auth-forgot-email',
+    reset: 'auth-reset-password',
+  };
+  const focusId = focusIds[mode] || focusIds.login;
+  window.setTimeout(() => document.getElementById(focusId)?.focus(), 50);
+  try { lucide.createIcons(); } catch(e) {}
+}
+
+function getResponseError(data, fallbackKey = 'authGenericError') {
+  if (data && typeof data.detail === 'string') return data.detail;
+  if (data && Array.isArray(data.detail)) {
+    return data.detail.map(item => item.msg || '').filter(Boolean).join(', ') || t(fallbackKey);
+  }
+  return t(fallbackKey);
+}
+
+function lockApplication(status = {}) {
+  authUser = null;
+  authStatus = status;
+  document.body.classList.add('auth-locked');
+  document.getElementById('auth-gate').classList.remove('hidden');
+  document.getElementById('account-chip').classList.add('hidden');
+  document.getElementById('admin-open').classList.add('hidden');
+  const registerTab = document.getElementById('auth-tab-register');
+  const registrationOpen = status.registration_open !== false;
+  registerTab.classList.toggle('hidden', !registrationOpen);
+  document.getElementById('auth-setup-note').classList.toggle('hidden', !status.needs_setup);
+  showAuthMode(status.needs_setup && registrationOpen ? 'register' : 'login');
+  try { lucide.createIcons(); } catch(e) {}
+}
+
+function unlockApplication(user) {
+  authUser = user;
+  document.body.classList.remove('auth-locked');
+  document.getElementById('auth-gate').classList.add('hidden');
+  document.getElementById('account-chip').classList.remove('hidden');
+  document.getElementById('account-name').textContent = user.name || user.email;
+  document.getElementById('account-role').textContent = String(user.role || 'user').toUpperCase();
+  const isAdmin = user.role === 'admin' || user.role === 'superadmin';
+  document.getElementById('admin-open').classList.toggle('hidden', !isAdmin);
+  const setupDock = document.querySelector('.setup-dock');
+  if (setupDock) setupDock.classList.toggle('hidden', !isAdmin);
+  try { lucide.createIcons(); } catch(e) {}
+}
+
+async function bootstrapAuth() {
+  try {
+    const statusResponse = await fetch('/api/auth/status', {cache: 'no-store'});
+    authStatus = await statusResponse.json();
+    if (!statusResponse.ok) throw new Error(getResponseError(authStatus));
+    const resetToken = new URLSearchParams(window.location.search).get('reset_token');
+    if (resetToken) {
+      lockApplication(authStatus);
+      showAuthMode('reset');
+      return false;
+    }
+    const meResponse = await fetch('/api/auth/me', {cache: 'no-store'});
+    if (!meResponse.ok) {
+      lockApplication(authStatus);
+      return false;
+    }
+    const me = await meResponse.json();
+    unlockApplication(me.user);
+    return true;
+  } catch (error) {
+    lockApplication(authStatus || {});
+    const errorNode = document.getElementById('auth-login-error');
+    errorNode.textContent = error.message || t('authGenericError');
+    return false;
+  }
+}
+
+async function submitAuth(event, mode) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const errorNode = document.getElementById(`auth-${mode}-error`);
+  const submitButton = form.querySelector('button[type="submit"]');
+  errorNode.textContent = '';
+  submitButton.disabled = true;
+  const payload = new FormData();
+  if (mode === 'register') {
+    payload.append('name', document.getElementById('auth-register-name').value.trim());
+    payload.append('email', document.getElementById('auth-register-email').value.trim());
+    payload.append('password', document.getElementById('auth-register-password').value);
+  } else {
+    payload.append('email', document.getElementById('auth-login-email').value.trim());
+    payload.append('password', document.getElementById('auth-login-password').value);
+  }
+  try {
+    const response = await fetch(`/api/auth/${mode}`, {method: 'POST', body: payload});
+    const data = await response.json();
+    if (!response.ok) throw new Error(getResponseError(data));
+    window.location.reload();
+  } catch (error) {
+    errorNode.textContent = error.message || t('authGenericError');
+    submitButton.disabled = false;
+  }
+}
+
+async function submitForgotPassword(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const errorNode = document.getElementById('auth-forgot-error');
+  const messageNode = document.getElementById('auth-forgot-message');
+  const submitButton = form.querySelector('button[type="submit"]');
+  errorNode.textContent = '';
+  messageNode.textContent = '';
+  submitButton.disabled = true;
+  const payload = new FormData();
+  payload.append('email', document.getElementById('auth-forgot-email').value.trim());
+  try {
+    const response = await fetch('/api/auth/forgot-password', {method: 'POST', body: payload});
+    const data = await response.json();
+    if (!response.ok) throw new Error(getResponseError(data));
+    messageNode.textContent = t('authForgotSent');
+  } catch (error) {
+    errorNode.textContent = error.message || t('authGenericError');
+  } finally {
+    submitButton.disabled = false;
+  }
+}
+
+async function submitResetPassword(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const errorNode = document.getElementById('auth-reset-error');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const password = document.getElementById('auth-reset-password').value;
+  const confirmation = document.getElementById('auth-reset-confirm').value;
+  errorNode.textContent = '';
+  if (password !== confirmation) {
+    errorNode.textContent = t('authPasswordMismatch');
+    return;
+  }
+  const token = new URLSearchParams(window.location.search).get('reset_token') || '';
+  submitButton.disabled = true;
+  const payload = new FormData();
+  payload.append('token', token);
+  payload.append('password', password);
+  try {
+    const response = await fetch('/api/auth/reset-password', {method: 'POST', body: payload});
+    const data = await response.json();
+    if (!response.ok) throw new Error(getResponseError(data));
+    window.history.replaceState({}, '', window.location.pathname);
+    form.reset();
+    showAuthMode('login');
+    document.getElementById('auth-login-message').textContent = t('authResetSuccess');
+  } catch (error) {
+    errorNode.textContent = error.message || t('authGenericError');
+  } finally {
+    submitButton.disabled = false;
+  }
+}
+
+async function logoutAccount() {
+  try { await fetch('/api/auth/logout', {method: 'POST'}); } catch(e) {}
+  window.location.reload();
+}
+
+function closeAdminPanel() {
+  document.getElementById('admin-overlay').classList.add('hidden');
+}
+
+function makeAdminStat(label, value) {
+  const node = document.createElement('span');
+  node.append(`${label}: `);
+  const strong = document.createElement('strong');
+  strong.textContent = String(value);
+  node.appendChild(strong);
+  return node;
+}
+
+function makeAdminSelect(values, selected, label) {
+  const select = document.createElement('select');
+  select.className = 'glass-input rounded-md px-2';
+  select.setAttribute('aria-label', label);
+  values.forEach(([value, text]) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = text;
+    option.selected = value === selected;
+    select.appendChild(option);
+  });
+  return select;
+}
+
+function renderAdminUsers(data) {
+  const list = document.getElementById('admin-user-list');
+  list.replaceChildren();
+  (data.users || []).forEach(user => {
+    const row = document.createElement('div');
+    row.className = 'admin-user-row';
+    row.dataset.userId = user.id;
+
+    const identity = document.createElement('div');
+    const email = document.createElement('p');
+    email.className = 'admin-user-email';
+    email.textContent = user.email;
+    const name = document.createElement('p');
+    name.className = 'admin-user-name';
+    name.textContent = `${user.name} · ${user.id === authUser?.id ? 'YOU' : new Date(user.created_at).toLocaleDateString()}`;
+    identity.append(email, name);
+
+    const roles = authUser?.role === 'superadmin'
+      ? [['user', 'USER'], ['admin', 'ADMIN'], ['superadmin', 'SUPERADMIN']]
+      : [[user.role, String(user.role || 'user').toUpperCase()]];
+    const role = makeAdminSelect(roles, user.role, t('adminRole'));
+    role.dataset.field = 'role';
+    if (authUser?.role !== 'superadmin' || (user.role === 'superadmin' && user.id !== authUser?.id)) role.disabled = true;
+
+    const status = makeAdminSelect(
+      [['active', t('adminActive')], ['disabled', t('adminDisabled')]],
+      user.status,
+      t('adminStatus'),
+    );
+    status.dataset.field = 'status';
+    if (user.id === authUser?.id || (user.role === 'superadmin' && user.id !== authUser?.id)) status.disabled = true;
+
+    const taskCount = document.createElement('span');
+    taskCount.className = 'text-xs text-gray-500';
+    taskCount.textContent = `${t('adminTasks')}: ${user.task_count || 0}`;
+    const save = document.createElement('button');
+    save.type = 'button';
+    save.className = 'admin-save-user';
+    save.textContent = t('adminSave');
+    save.onclick = () => saveAdminUser(row, save);
+    const actions = document.createElement('div');
+    actions.className = 'admin-user-actions';
+    actions.appendChild(save);
+    if (authUser?.role === 'superadmin' && user.id !== authUser.id && user.role !== 'superadmin') {
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'admin-delete-user';
+      remove.title = t('adminDelete');
+      remove.setAttribute('aria-label', t('adminDelete'));
+      remove.innerHTML = '<i data-lucide="trash-2"></i>';
+      remove.onclick = () => deleteAdminUser(user, remove);
+      actions.appendChild(remove);
+    }
+    row.append(identity, role, status, taskCount, actions);
+    list.appendChild(row);
+  });
+  try { lucide.createIcons(); } catch(e) {}
+}
+
+async function loadAdminData() {
+  const [statsResponse, usersResponse] = await Promise.all([
+    fetch('/api/admin/stats', {cache: 'no-store'}),
+    fetch('/api/admin/users', {cache: 'no-store'}),
+  ]);
+  const stats = await statsResponse.json();
+  const users = await usersResponse.json();
+  if (!statsResponse.ok || !usersResponse.ok) {
+    throw new Error(getResponseError(!statsResponse.ok ? stats : users, 'adminLoadFailed'));
+  }
+  const statsNode = document.getElementById('admin-stats');
+  statsNode.replaceChildren(
+    makeAdminStat(t('adminUsers'), stats.users || 0),
+    makeAdminStat(t('adminTasks'), stats.tasks || 0),
+    makeAdminStat(t('adminLegacy'), users.legacy_task_count || 0),
+  );
+  renderAdminUsers(users);
+}
+
+async function openAdminPanel() {
+  if (!authUser || !['admin', 'superadmin'].includes(authUser.role)) return;
+  document.getElementById('admin-overlay').classList.remove('hidden');
+  document.getElementById('admin-stats').textContent = t('loading');
+  document.getElementById('admin-user-list').replaceChildren();
+  try {
+    await loadAdminData();
+  } catch (error) {
+    document.getElementById('admin-stats').textContent = error.message || t('adminLoadFailed');
+  }
+}
+
+async function saveAdminUser(row, button) {
+  const payload = new FormData();
+  payload.append('role', row.querySelector('[data-field="role"]').value);
+  payload.append('status', row.querySelector('[data-field="status"]').value);
+  button.disabled = true;
+  try {
+    const response = await fetch(`/api/admin/users/${encodeURIComponent(row.dataset.userId)}`, {
+      method: 'PATCH',
+      body: payload,
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(getResponseError(data));
+    await loadAdminData();
+  } catch (error) {
+    alert(error.message || t('adminLoadFailed'));
+    button.disabled = false;
+  }
+}
+
+async function deleteAdminUser(user, button) {
+  const message = t('adminDeleteConfirm').replace('{email}', user.email);
+  if (!confirm(message)) return;
+  button.disabled = true;
+  try {
+    const response = await fetch(`/api/admin/users/${encodeURIComponent(user.id)}`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(getResponseError(data));
+    await loadAdminData();
+  } catch (error) {
+    alert(error.message || t('adminLoadFailed'));
+    button.disabled = false;
+  }
+}
+
+async function initializeAuthenticatedApp() {
+  if (appInitialized) return;
+  appInitialized = true;
 
   try {
     const r = await fetch('/api/config');
@@ -3433,6 +5544,7 @@ const STEPS = {
     if (d.api_key) {
       setApiKeyConfiguredUI(d.source, d.can_clear);
     }
+    renderGeminiConfig(d);
     renderWorkspaces(d.workspaces || [], d.active_workspace || '', d.working_dir_source || 'config');
     // 加载水印配置
     if (d.watermark !== undefined) {
@@ -3464,6 +5576,13 @@ const STEPS = {
   try {
     await initVoiceSelector();
   } catch (e) { console.error('init voice selector error:', e); }
+}
+
+(async function init() {
+  try { currentLang = localStorage.getItem('lang') || 'vi'; } catch(e) { currentLang = 'vi'; }
+  try { applyLanguage(currentLang); } catch(e) { console.error('applyLanguage error:', e); }
+  const authenticated = await bootstrapAuth();
+  if (authenticated) await initializeAuthenticatedApp();
 })();
 
 // ═══════════════════════════════════════════════════
@@ -3491,8 +5610,8 @@ async function initVoiceSelector() {
     console.error('load voices failed:', e);
     voiceCatalog = { languages: [], compat_hint: {} };
   }
-  // 初始化 4 个任务的芯片显示
-  ['c', 'm', 'a', 'p'].forEach(task => applyVoiceChip(task));
+  // 初始化各任务的音色芯片显示
+  ['c', 'm', 'a', 'pr', 'p'].forEach(task => applyVoiceChip(task));
 }
 
 function applyVoiceChip(task) {
@@ -3757,7 +5876,7 @@ function switchTaskType(type) {
   });
   document.getElementById('ttype-' + type).className = document.getElementById('ttype-' + type).className.replace(/tab-inactive/, 'tab-active');
 
-  ['simple', 'creative', 'manuscript', 'anchor', 'poetry'].forEach(t => {
+  ['simple', 'creative', 'manuscript', 'anchor', 'product', 'poetry'].forEach(t => {
     document.getElementById('form-' + t).classList.toggle('hidden', t !== type);
   });
 }
@@ -3845,9 +5964,14 @@ function clearRunning() {
   currentTaskId = null;
   stopPolling();
   // 恢复提交按钮
-  ['btn-simple', 'btn-creative', 'btn-manuscript', 'btn-anchor'].forEach(id => {
+  const buttonLabels = {
+    'btn-simple': 'startGenerate', 'btn-creative': 'startGenerate',
+    'btn-manuscript': 'startGenerate', 'btn-anchor': 'startGenerate',
+    'btn-product': 'productGenerate', 'btn-poetry': 'startGenerate',
+  };
+  Object.entries(buttonLabels).forEach(([id, labelKey]) => {
     const btn = document.getElementById(id);
-    if (btn) { btn.disabled = false; btn.textContent = t('startGenerate'); }
+    if (btn) { btn.disabled = false; btn.textContent = t(labelKey); }
   });
   document.getElementById('btn-stop').classList.add('hidden');
 }
@@ -4143,6 +6267,462 @@ async function submitAnchor() {
     trackEvent('create_task_failed', { task_type: 'anchor', error: (e.message || '').slice(0, 120) });
     alert(t('failCreate') + ': ' + e.message);
     btn.disabled = false; btn.textContent = t('startGenerate');
+  }
+}
+
+function productApiError(data, fallback) {
+  const detail = data && data.detail;
+  if (typeof detail === 'string' && detail) return detail;
+  if (Array.isArray(detail)) {
+    return detail.map(item => item.msg || String(item)).join(', ');
+  }
+  return fallback;
+}
+
+function setProductImageReady(ready) {
+  productImageReady = !!ready;
+  const button = document.getElementById('pr_analyze');
+  if (button) button.disabled = !productImageReady;
+}
+
+function clearProductSourcePreview() {
+  const preview = document.getElementById('pr_source_preview');
+  const image = document.getElementById('pr_source_image');
+  if (image) {
+    image.onload = null;
+    image.onerror = null;
+    image.removeAttribute('src');
+  }
+  if (preview) preview.classList.add('hidden');
+  lastProductSource = null;
+  setProductImageReady(false);
+}
+
+function renderProductSourcePreview({ imageUrl = '', site = '', title = '', description = '', onReady = null }) {
+  const preview = document.getElementById('pr_source_preview');
+  const image = document.getElementById('pr_source_image');
+  setProductImageReady(false);
+  preview.classList.toggle('no-image', !imageUrl);
+  image.classList.toggle('hidden', !imageUrl);
+  image.onload = null;
+  image.onerror = null;
+  if (imageUrl) {
+    let imageSettled = false;
+    image.onload = () => {
+      if (imageSettled) return;
+      imageSettled = true;
+      setProductImageReady(image.naturalWidth > 0 && image.naturalHeight > 0);
+      document.querySelector('label[for="pr_image"]')?.classList.remove('needs-attention');
+      if (productImageReady && typeof onReady === 'function') onReady();
+    };
+    image.onerror = () => {
+      if (imageSettled) return;
+      imageSettled = true;
+      setProductImageReady(false);
+      const error = document.getElementById('pr_link_error');
+      error.textContent = t('productImageLoadFailed');
+      error.classList.remove('hidden');
+    };
+    image.src = imageUrl;
+    if (image.complete && image.naturalWidth > 0) queueMicrotask(() => image.onload());
+  }
+  document.getElementById('pr_source_site').textContent = site || 'PRODUCT SOURCE';
+  document.getElementById('pr_source_title').textContent = title || t('productSourceReady');
+  document.getElementById('pr_source_description').textContent = description || '';
+  preview.classList.remove('hidden');
+}
+
+function renderGeminiConfig(config = {}) {
+  geminiConfigured = !!config.gemini_configured;
+  geminiConfigSource = config.gemini_source || 'none';
+  geminiModel = config.gemini_model || 'gemini-3.6-flash';
+
+  const status = document.getElementById('pr_gemini_status');
+  const input = document.getElementById('pr_gemini_key');
+  const select = document.getElementById('pr_gemini_model');
+  const grid = document.getElementById('pr_gemini_grid');
+  const save = document.getElementById('pr_gemini_save');
+  const clear = document.getElementById('pr_gemini_clear');
+  if (!status || !input || !select || !grid || !save || !clear) return;
+
+  if (![...select.options].some(option => option.value === geminiModel)) {
+    select.add(new Option(geminiModel, geminiModel));
+  }
+  select.value = geminiModel;
+  status.classList.toggle('ready', geminiConfigured);
+  status.textContent = geminiConfigured
+    ? (geminiConfigSource === 'env' ? t('geminiEnv') : t('geminiReady'))
+    : t('geminiMissing');
+  input.disabled = geminiConfigSource === 'env';
+  input.placeholder = geminiConfigSource === 'env' ? t('geminiEnv') : t('geminiKeyPlaceholder');
+  input.classList.toggle('hidden', geminiConfigured);
+  save.classList.toggle('hidden', geminiConfigured);
+  select.disabled = geminiConfigured;
+  grid.classList.toggle('configured', geminiConfigured);
+  clear.classList.toggle('hidden', !geminiConfigured || geminiConfigSource !== 'config');
+}
+
+async function saveGeminiConfig() {
+  const input = document.getElementById('pr_gemini_key');
+  const key = input.value.trim();
+  if (!key) return alert(t('geminiKeyRequired'));
+
+  const form = new FormData();
+  form.append('api_key', key);
+  form.append('model', document.getElementById('pr_gemini_model').value);
+  try {
+    const response = await fetch('/api/config/gemini', { method: 'POST', body: form });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(productApiError(data, t('geminiSaveFailed')));
+    input.value = '';
+    renderGeminiConfig({
+      gemini_configured: true,
+      gemini_source: 'config',
+      gemini_model: data.model,
+    });
+    showToast(t('geminiSaved'), 3500);
+  } catch (error) {
+    alert(`${t('geminiSaveFailed')}: ${error.message}`);
+  }
+}
+
+async function clearGeminiConfig() {
+  if (!confirm(t('geminiClearConfirm'))) return;
+  try {
+    const response = await fetch('/api/config/gemini', { method: 'DELETE' });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(productApiError(data, t('geminiClearFailed')));
+    renderGeminiConfig({
+      gemini_configured: false,
+      gemini_source: 'none',
+      gemini_model: geminiModel,
+    });
+    resetProductAnalysis();
+    showToast(t('geminiCleared'), 3500);
+  } catch (error) {
+    alert(`${t('geminiClearFailed')}: ${error.message}`);
+  }
+}
+
+function resetProductAnalysis() {
+  lastProductAnalysis = null;
+  const panel = document.getElementById('pr_analysis_panel');
+  if (panel) panel.classList.add('hidden');
+  const script = document.getElementById('pr_script');
+  if (script) script.value = '';
+}
+
+function handleProductUrlInput() {
+  resetProductAnalysis();
+  document.getElementById('pr_link_error')?.classList.add('hidden');
+  document.getElementById('pr_analysis_error')?.classList.add('hidden');
+  if (lastProductSource?.mode === 'link') clearProductSourcePreview();
+}
+
+function renderProductAnalysis(analysis, model) {
+  const facts = Array.isArray(analysis.verified_facts) ? analysis.verified_facts : [];
+  const missing = Array.isArray(analysis.missing_information) ? analysis.missing_information : [];
+  const factList = document.getElementById('pr_verified_facts');
+  const missingList = document.getElementById('pr_missing_info');
+  factList.replaceChildren();
+  missingList.replaceChildren();
+
+  for (const item of facts) {
+    const row = document.createElement('li');
+    row.className = 'product-fact';
+    const source = document.createElement('span');
+    source.className = 'product-fact-source';
+    source.textContent = t(`factSource${String(item.source || '').replace(/^./, c => c.toUpperCase())}`) || item.source;
+    const content = document.createElement('span');
+    content.textContent = `${item.fact} · ${item.evidence}`;
+    row.append(source, content);
+    factList.appendChild(row);
+  }
+  if (!facts.length) {
+    const empty = document.createElement('li');
+    empty.className = 'product-missing-item';
+    empty.textContent = t('noVerifiedFacts');
+    factList.appendChild(empty);
+  }
+
+  for (const item of missing) {
+    const row = document.createElement('li');
+    row.className = 'product-missing-item';
+    row.textContent = item;
+    missingList.appendChild(row);
+  }
+  if (!missing.length) {
+    const empty = document.createElement('li');
+    empty.className = 'product-missing-item';
+    empty.textContent = t('noMissingInfo');
+    missingList.appendChild(empty);
+  }
+
+  document.getElementById('pr_analysis_summary').textContent = analysis.analysis_summary || '';
+  document.getElementById('pr_analysis_model').textContent = model || geminiModel;
+  document.getElementById('pr_script').value = analysis.recommended_script || '';
+  const warnings = Array.isArray(analysis.warnings) ? analysis.warnings.filter(Boolean) : [];
+  document.getElementById('pr_analysis_warning').textContent = warnings.length
+    ? `${t('productAnalysisGuard')} ${warnings.join(' ')}`
+    : t('productAnalysisGuard');
+  document.getElementById('pr_analysis_panel').classList.remove('hidden');
+  lastProductAnalysis = analysis;
+}
+
+function handleProductImage(input) {
+  resetProductAnalysis();
+  document.getElementById('pr_analysis_error')?.classList.add('hidden');
+  document.querySelector('label[for="pr_image"]')?.classList.remove('needs-attention');
+  const file = input.files && input.files[0];
+  const name = document.getElementById('pr_image_name');
+  if (!file) {
+    name.textContent = t('productImageHint');
+    if (lastProductSource?.mode === 'upload') {
+      clearProductSourcePreview();
+      if (productPreviewObjectUrl) URL.revokeObjectURL(productPreviewObjectUrl);
+      productPreviewObjectUrl = null;
+    }
+    return;
+  }
+  const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+  if (!allowed.includes(file.type) || file.size > 12 * 1024 * 1024) {
+    input.value = '';
+    name.textContent = t('productImageHint');
+    alert(file.size > 12 * 1024 * 1024 ? 'Ảnh không được vượt quá 12 MB' : 'Ảnh phải là JPG, PNG, WEBP hoặc AVIF');
+    return;
+  }
+  if (productPreviewObjectUrl) URL.revokeObjectURL(productPreviewObjectUrl);
+  productPreviewObjectUrl = URL.createObjectURL(file);
+  name.textContent = `${t('productImageSelected')}: ${file.name}`;
+  lastProductSource = {
+    mode: 'upload',
+    image_url: '',
+    title: file.name,
+    description: `${Math.max(1, Math.round(file.size / 1024))} KB`,
+    site_name: 'UPLOAD',
+  };
+  renderProductSourcePreview({
+    imageUrl: productPreviewObjectUrl,
+    site: 'UPLOAD',
+    title: file.name,
+    description: `${Math.max(1, Math.round(file.size / 1024))} KB`,
+  });
+}
+
+function setProductImageFile(file) {
+  if (!file || !file.type.startsWith('image/')) return false;
+  const extension = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp',
+    'image/avif': 'avif',
+  }[file.type] || 'png';
+  const normalizedFile = file.name
+    ? file
+    : new File([file], `product-clipboard-${Date.now()}.${extension}`, { type: file.type });
+  const transfer = new DataTransfer();
+  transfer.items.add(normalizedFile);
+  const input = document.getElementById('pr_image');
+  input.files = transfer.files;
+  handleProductImage(input);
+  return !!input.files[0];
+}
+
+async function pasteProductImage() {
+  if (!navigator.clipboard || typeof navigator.clipboard.read !== 'function') {
+    return alert(t('productPasteHint'));
+  }
+  try {
+    const clipboardItems = await navigator.clipboard.read();
+    for (const item of clipboardItems) {
+      const imageType = item.types.find(type => type.startsWith('image/'));
+      if (!imageType) continue;
+      const blob = await item.getType(imageType);
+      if (setProductImageFile(blob)) {
+        showToast(t('productPasteSuccess'), 3500);
+        return;
+      }
+    }
+    alert(t('productPasteHint'));
+  } catch (error) {
+    console.warn('[Product] Clipboard image unavailable:', error.message);
+    alert(t('productPasteHint'));
+  }
+}
+
+document.addEventListener('paste', event => {
+  const productForm = document.getElementById('form-product');
+  if (!productForm || productForm.classList.contains('hidden')) return;
+  const imageFile = [...(event.clipboardData?.files || [])].find(file => file.type.startsWith('image/'));
+  if (!imageFile) return;
+  event.preventDefault();
+  if (setProductImageFile(imageFile)) showToast(t('productPasteSuccess'), 3500);
+});
+
+async function inspectProductLink() {
+  const url = document.getElementById('pr_url').value.trim();
+  if (!url) return alert(t('productLinkOnlyRequired'));
+
+  const btn = document.getElementById('pr_inspect');
+  const btnLabel = btn.querySelector('span');
+  const error = document.getElementById('pr_link_error');
+  resetProductAnalysis();
+  error.classList.add('hidden');
+  btn.disabled = true;
+  btnLabel.textContent = t('productInspecting');
+
+  const form = new FormData();
+  form.append('product_url', url);
+  try {
+    const response = await fetch('/api/products/inspect', { method: 'POST', body: form });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(productApiError(data, t('productSourceFailed')));
+    if (!data.image_url) throw new Error(t('productImageNotFound'));
+
+    const imageInput = document.getElementById('pr_image');
+    imageInput.value = '';
+    document.getElementById('pr_image_name').textContent = t('productImageHint');
+    if (productPreviewObjectUrl) {
+      URL.revokeObjectURL(productPreviewObjectUrl);
+      productPreviewObjectUrl = null;
+    }
+    lastProductSource = { ...data, mode: 'link' };
+    renderProductSourcePreview({
+      imageUrl: data.image_url,
+      site: data.site_name || (data.source_url ? new URL(data.source_url).hostname : 'PRODUCT'),
+      title: data.title || data.source_url,
+      description: data.description || '',
+      onReady: () => showToast(t('productSourceReady'), 3500),
+    });
+    const name = document.getElementById('pr_name');
+    if (!name.value.trim() && data.title) name.value = data.title;
+  } catch (e) {
+    const message = `${t('productSourceFailed')}: ${e.message}`;
+    error.textContent = message;
+    error.classList.remove('hidden');
+    console.warn('[Product] Link inspection failed:', e.message);
+    showToast(message, 7000);
+    document.querySelector('label[for="pr_image"]')?.classList.add('needs-attention');
+  } finally {
+    btn.disabled = false;
+    btnLabel.textContent = t('productInspect');
+  }
+}
+
+async function analyzeProductWithGemini() {
+  if (!productImageReady) return alert(t('productImageRequired'));
+  if (!geminiConfigured) return alert(t('geminiRequired'));
+
+  const url = document.getElementById('pr_url').value.trim();
+  const image = document.getElementById('pr_image').files[0];
+  const btn = document.getElementById('pr_analyze');
+  const btnLabel = btn.querySelector('span');
+  const error = document.getElementById('pr_analysis_error');
+  resetProductAnalysis();
+  error.classList.add('hidden');
+  btn.disabled = true;
+  btnLabel.textContent = t('productAnalyzing');
+
+  const form = new FormData();
+  if (url) form.append('product_url', url);
+  if (image) {
+    form.append('reference_image', image);
+  } else if (lastProductSource?.image_url) {
+    form.append('source_image_url', lastProductSource.image_url);
+  }
+  form.append('product_name', document.getElementById('pr_name').value.trim());
+  form.append('product_details', document.getElementById('pr_details').value.trim());
+
+  try {
+    const response = await fetch('/api/products/analyze', { method: 'POST', body: form });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(productApiError(data, t('productAnalysisFailed')));
+    const analysis = data.analysis || {};
+    const name = document.getElementById('pr_name');
+    if (!name.value.trim() && (analysis.product_name || data.title)) {
+      name.value = analysis.product_name || data.title;
+    }
+    const audience = document.getElementById('pr_audience');
+    if (analysis.suggested_audience && (!audience.value.trim() || audience.value === 'Người mua hàng online')) {
+      audience.value = analysis.suggested_audience;
+    }
+    renderProductAnalysis(analysis, data.model);
+    showToast(data.source_warning || t('productAnalysisReady'), 4500);
+  } catch (e) {
+    const message = `${t('productAnalysisFailed')}: ${e.message}`;
+    error.textContent = message;
+    error.classList.remove('hidden');
+    console.warn('[Product] Gemini analysis failed:', e.message);
+    showToast(message, 7000);
+  } finally {
+    btn.disabled = !productImageReady;
+    btnLabel.textContent = t('productAnalyze');
+  }
+}
+
+async function submitProduct() {
+  const url = document.getElementById('pr_url').value.trim();
+  const image = document.getElementById('pr_image').files[0];
+  if (!url && !image) return alert(t('productLinkRequired'));
+  if (!lastProductAnalysis || !(lastProductAnalysis.verified_facts || []).length) {
+    return alert(t('productAnalysisRequired'));
+  }
+  const marketingScript = document.getElementById('pr_script').value.trim();
+  if (!marketingScript) return alert(t('productScriptRequired'));
+
+  const btn = document.getElementById('btn-product');
+  btn.disabled = true;
+  btn.textContent = t('submitting');
+
+  const form = new FormData();
+  form.append('product_url', url);
+  if (!image && lastProductSource?.image_url) {
+    form.append('source_image_url', lastProductSource.image_url);
+  }
+  form.append('product_name', document.getElementById('pr_name').value.trim());
+  form.append('product_details', document.getElementById('pr_details').value.trim());
+  form.append('marketing_script', marketingScript);
+  form.append('gemini_analysis_json', JSON.stringify(lastProductAnalysis));
+  form.append('target_audience', document.getElementById('pr_audience').value.trim());
+  form.append('marketing_tone', document.getElementById('pr_tone').value);
+  form.append('call_to_action', document.getElementById('pr_cta').value.trim());
+  form.append('creative_name', document.getElementById('pr_name').value.trim());
+  const [sceneCount, sceneDuration] = document.getElementById('pr_length').value.split('x').map(Number);
+  form.append('scene_count', sceneCount);
+  form.append('scene_duration', sceneDuration);
+  const resolution = parseResolution(document.getElementById('pr_resolution').value);
+  form.append('video_width', resolution.width);
+  form.append('video_height', resolution.height);
+  if (image) form.append('reference_image', image);
+  form.append('audio_enabled', document.getElementById('pr_audio_enabled').checked);
+  form.append('audio_voice', document.getElementById('pr_voice').value);
+  form.append('audio_rate', document.getElementById('pr_rate').value);
+  form.append('audio_lang', 'vi');
+  form.append('subtitle_enabled', document.getElementById('pr_subtitle_enabled').checked);
+
+  try {
+    const response = await fetch('/api/tasks/product', { method: 'POST', body: form });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(productApiError(data, t('failCreate')));
+    trackEvent('create_task', {
+      task_type: 'product',
+      source: url ? (image ? 'link_and_upload' : 'link') : 'upload',
+      scene_count: sceneCount,
+      resolution: document.getElementById('pr_resolution').value,
+      audio: document.getElementById('pr_audio_enabled').checked ? 'on' : 'off',
+      subtitle: document.getElementById('pr_subtitle_enabled').checked ? 'on' : 'off',
+    });
+    currentTaskType = 'product';
+    setRunning(data.task_id);
+    currentDirName = data.dir_name;
+    await showProgress(data.task_id, data.dir_name);
+    await startPolling(data.task_id);
+    showToast(data.source_warning || t('submitted'), 5000);
+  } catch (e) {
+    trackEvent('create_task_failed', { task_type: 'product', error: (e.message || '').slice(0, 120) });
+    alert(t('failCreate') + ': ' + e.message);
+    btn.disabled = false;
+    btn.textContent = t('productGenerate');
   }
 }
 
@@ -4670,8 +7250,8 @@ async function loadTaskList() {
     container.innerHTML = tasks.map(task => {
       const statusColors = { completed: 'text-green-400', running: 'text-yellow-400', failed: 'text-red-400', pending: 'text-gray-400', queued: 'text-cyan-400' };
       const statusLabels = { completed: t('statusCompleted'), running: t('statusRunning'), failed: t('statusFailed'), pending: t('statusPending'), queued: t('statusQueued') };
-      const typeLabels = { simple: t('typeSimple'), creative: t('typeCreative'), manuscript: t('typeManuscript'), anchor: t('typeAnchor'), poetry: t('typePoetry'), image: t('typeImage') };
-      const typeColors = { simple: 'bg-blue-900 text-blue-300', creative: 'bg-blue-900 text-blue-300', manuscript: 'bg-orange-900 text-orange-300', anchor: 'bg-amber-900 text-amber-300', poetry: 'bg-purple-900 text-purple-300' };
+      const typeLabels = { simple: t('typeSimple'), creative: t('typeCreative'), product: t('typeProduct'), manuscript: t('typeManuscript'), anchor: t('typeAnchor'), poetry: t('typePoetry'), image: t('typeImage') };
+      const typeColors = { simple: 'bg-blue-900 text-blue-300', creative: 'bg-blue-900 text-blue-300', product: 'bg-cyan-950 text-cyan-300', manuscript: 'bg-orange-900 text-orange-300', anchor: 'bg-amber-900 text-amber-300', poetry: 'bg-purple-900 text-purple-300' };
       const isCompleted = task.status === 'completed';
       const isRunning = task.status === 'running' || task.status === 'queued';
       const btnLabel = isCompleted ? t('btnView') : (isRunning ? t('btnViewProgress') : t('btnResume'));
@@ -4681,7 +7261,7 @@ async function loadTaskList() {
       // pending/failed 状态额外添加"查看"按钮（查看产物）
       const viewBtn = (!isCompleted && !isRunning) ? `<button onclick="viewTask('${tidAttr}')" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition">${t('btnView')}</button>` : '';
       const typeBadge = `<span class="text-xs px-2 py-0.5 rounded-full ${typeColors[task.task_type] || 'bg-gray-800 text-gray-400'}">${escapeHtml(typeLabels[task.task_type] || task.task_type)}</span>`;
-      const desc = task.idea || task.prompt || (task.manuscript_text || '').substring(0, 80) || (task.script_text || '').substring(0, 80);
+      const desc = task.product_name || task.idea || task.prompt || (task.manuscript_text || '').substring(0, 80) || (task.script_text || '').substring(0, 80);
       const extra = task.scene_count ? ` · ${task.scene_count}${t('sceneUnit')}` : (task.paragraph_count ? ` · ${task.paragraph_count}${t('paraUnit')}` : '');
       return `<div class="glass-card rounded-xl p-4 flex items-center justify-between">
         <div class="flex-1 min-w-0">
@@ -4813,7 +7393,7 @@ function showTaskDetail(taskId, state) {
 
   const stepsHtml = steps.map(s => {
     let stateField = null;
-    if (taskType === 'creative') stateField = creativeStepMap[s.key];
+    if (taskType === 'creative' || taskType === 'product') stateField = creativeStepMap[s.key];
     else if (taskType === 'manuscript') stateField = manuscriptStepMap[s.key];
     else if (taskType === 'anchor') stateField = anchorStepMap[s.key];
     else if (taskType === 'poetry') stateField = poetryStepMap[s.key];
@@ -4831,9 +7411,13 @@ function showTaskDetail(taskId, state) {
   document.getElementById('progress-bar').style.width = '100%';
   document.getElementById('progress-pct').textContent = '100%';
 
-  const typeLabel = { simple: t('typeSimple'), creative: t('typeCreative'), manuscript: t('typeManuscript'), anchor: t('typeAnchor'), poetry: t('typePoetry'), image: t('typeImage') };
+  const typeLabel = { simple: t('typeSimple'), creative: t('typeCreative'), product: t('typeProduct'), manuscript: t('typeManuscript'), anchor: t('typeAnchor'), poetry: t('typePoetry'), image: t('typeImage') };
   let extraInfo = '';
-  if (taskType === 'creative') {
+  if (taskType === 'product') {
+    extraInfo = `<p class="text-gray-500">${t('productName')}: ${escapeHtml(state.product_name || '')}</p>
+      <p class="text-gray-500">${t('productLink')}: ${escapeHtml((state.product_url || '').substring(0, 160))}</p>
+      <p class="text-gray-500">${t('sceneCount')}: ${state.scene_count || 0}</p>`;
+  } else if (taskType === 'creative') {
     extraInfo = `<p class="text-gray-500">${t('idea_')}: ${escapeHtml((state.idea || '').substring(0, 100))}</p>
       <p class="text-gray-500">${t('sceneCount')}: ${state.scene_count || 0}</p>`;
   } else if (taskType === 'manuscript') {

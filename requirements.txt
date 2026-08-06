@@ -7,6 +7,8 @@ PyYAML>=6.0,<7.0
 moviepy>=2.0.0,<3.0.0
 tenacity>=8.0.0,<10.0.0
 python-multipart>=0.0.6,<1.0.0
+pymongo>=4.13.0,<5.0.0             # MongoDB users, sessions, roles, and ownership metadata
+python-dotenv>=1.0.0,<2.0.0         # Local .env secrets for MongoDB and SMTP
 
 # v2.0 added
 edge_tts>=6.1.0,<8.0.0          # Azure Edge TTS, free without API Key

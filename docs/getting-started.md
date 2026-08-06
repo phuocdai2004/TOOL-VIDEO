@@ -3,6 +3,7 @@
 ## Prerequisites
 
 - Python 3.10+
+- MongoDB 8.0+ (stores accounts, sessions, and roles)
 - ffmpeg — required only for **manual setup** (Option A); the Docker (Option B) and npm (Option C) options bundle ffmpeg automatically, so no system ffmpeg install is needed there.
 
 That's it. No GPU, no large RAM, a regular laptop is all you need.
@@ -17,7 +18,7 @@ cd agnes-video-generator
 ./start.sh
 ```
 
-The script automatically creates a virtual environment, installs dependencies, and opens `http://localhost:8765` in your browser. You can also start manually:
+Make sure MongoDB is running locally first. The script automatically creates a virtual environment, installs dependencies, and opens `http://localhost:8765` in your browser. You can also start manually:
 
 ```bash
 python3 -m venv .venv
@@ -25,7 +26,11 @@ python3 -m venv .venv
 .venv/bin/python server.py
 ```
 
-**Step 2 — Configure API Key**
+**Step 2 — Create the Superadmin Account**
+
+Open `http://localhost:8765` and register the first account. The first account automatically receives the `superadmin` role. Later accounts start as regular users and only see their own videos.
+
+**Step 3 — Configure API Key**
 
 Get a free API key from [Agnes AI](https://platform.agnes-ai.com), then choose one of two ways:
 
@@ -39,47 +44,59 @@ curl -X POST http://localhost:8765/api/config \
   -d '{"api_key": "your-api-key"}'
 ```
 
-**Step 3 — Create Your First Video**
+Only an admin or superadmin can change shared API keys and workspaces.
+
+**Step 4 — Create Your First Video**
 
 Open `http://localhost:8765`, choose a video mode (Simple / Creative / Manuscript / Anchor), enter your idea, and click "Start Generating".
+
+### Password recovery email
+
+Copy `.env.example` to `.env` in the project root and configure SMTP before using **Forgot password**. For Gmail, use an App Password rather than your normal Google password.
+
+```env
+PUBLIC_BASE_URL=http://localhost:8765
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-account@gmail.com
+SMTP_PASSWORD=your-google-app-password
+SMTP_FROM=your-account@gmail.com
+SMTP_USE_TLS=true
+```
+
+Restart the service after changing `.env`. Reset links are single-use, expire after 30 minutes, and revoke existing login sessions after the password changes.
 
 ## Option B: Docker (No Python/FFmpeg Required)
 
 Pre-built multi-arch images (`linux/amd64`, `linux/arm64`) are published to both **GitHub Container Registry (GHCR)** and **Docker Hub** on every release.
 
-**Pull & Run**
-
-```bash
-# GHCR
-docker run -d -p 8765:8765 \
-  -e AGNES_API_KEY=<your-key> \
-  -v ~/agnes-data/working:/app/.working_dir \
-  -v ~/agnes-data/config:/app/.agnes_config \
-  ghcr.io/phuocdai2004/tool-video:latest
-
-# Docker Hub
-docker run -d -p 8765:8765 \
-  -e AGNES_API_KEY=<your-key> \
-  -v ~/agnes-data/working:/app/.working_dir \
-  -v ~/agnes-data/config:/app/.agnes_config \
-  phuocdai2004/tool-video:latest
-```
-
-Then open `http://localhost:8765`.
-
-**Data Persistence:** The app writes videos, uploads, and settings inside the container (`/app/.working_dir`, `/app/.agnes_config`). Mount them to your host so outputs survive container recreation and are accessible from your local filesystem. Your generated videos will be at `~/agnes-data/working/` on your machine.
-
-Or use `docker compose` with the included `docker-compose.yml`:
+The recommended deployment is the included Compose stack because it starts both the app and its private MongoDB service:
 
 ```bash
 git clone https://github.com/phuocdai2004/TOOL-VIDEO.git
 cd agnes-video-generator
-AGNES_API_KEY=<your-key> docker compose up -d
+cp .env.example .env
+docker compose up -d
+```
+
+Set `AGNES_API_KEY` and `GEMINI_API_KEY` in `.env` when needed, then open `http://localhost:8765` and create the first superadmin account.
+
+**Data Persistence:** Videos, uploads, settings, and MongoDB data are stored under `./agnes_data/`, so they survive container recreation.
+
+For a standalone app container, provide a reachable MongoDB instance explicitly:
+
+```bash
+docker run -d -p 8765:8765 \
+  -e MONGODB_URI='mongodb://your-mongodb-host:27017/agnes_video' \
+  -e AGNES_API_KEY=<your-key> \
+  -v ~/agnes-data/working:/app/.working_dir \
+  -v ~/agnes-data/config:/app/.agnes_config \
+  ghcr.io/phuocdai2004/tool-video:latest
 ```
 
 ## Option C: npm (One Command)
 
-If you have **Node.js 18+** and **Python 3.10+** installed, the whole service ships as an npm package — no cloning, no manual venv:
+If you have **Node.js 18+**, **Python 3.10+**, and a running MongoDB instance, the whole service ships as an npm package — no cloning or manual venv:
 
 ```bash
 # Run directly without installing

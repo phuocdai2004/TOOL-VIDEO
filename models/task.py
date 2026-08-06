@@ -33,6 +33,7 @@ class StepStatus(str, Enum):
 class TaskType(str, Enum):
     SIMPLE = "simple"
     CREATIVE = "creative"
+    PRODUCT = "product"
     MANUSCRIPT = "manuscript"
     ANCHOR = "anchor"
     IMAGE = "image"
@@ -150,6 +151,7 @@ class BaseTaskState(BaseModel):
     """所有任务共享的基础字段（抽象父类）"""
 
     task_id: str = Field(default_factory=lambda: uuid.uuid4().hex[:12])
+    owner_id: str = ""
     creative_name: str = ""
     task_type: TaskType
     status: StepStatus = StepStatus.PENDING
@@ -267,6 +269,28 @@ class CreativeVideoTask(BaseTaskState):
 
     def get_pending_videos(self) -> List[SceneTask]:
         return [s for s in self.scenes if s.video_status != StepStatus.COMPLETED]
+
+
+class ProductVideoTask(CreativeVideoTask):
+    """Product-marketing video built on the creative multi-scene pipeline."""
+
+    task_type: Literal[TaskType.PRODUCT] = TaskType.PRODUCT
+
+    product_url: str = ""
+    product_name: str = ""
+    product_details: str = ""
+    target_audience: str = ""
+    marketing_tone: str = ""
+    call_to_action: str = ""
+    source_title: str = ""
+    source_description: str = ""
+    source_image_url: str = ""
+    source_site_name: str = ""
+    source_warning: str = ""
+    marketing_script: str = ""
+    gemini_analysis_json: str = ""
+    analysis_provider: str = ""
+    analysis_model: str = ""
 
 
 class ManuscriptVideoTask(BaseTaskState):
@@ -422,12 +446,21 @@ class SimpleImageTask(BaseTaskState):
 # 联合类型 + 反序列化工厂
 # ═══════════════════════════════════════════════════
 
-AnyTaskState = Union[SimpleVideoTask, CreativeVideoTask, ManuscriptVideoTask, AnchorVideoTask, PoetryVideoTask, SimpleImageTask]
+AnyTaskState = Union[
+    SimpleVideoTask,
+    CreativeVideoTask,
+    ProductVideoTask,
+    ManuscriptVideoTask,
+    AnchorVideoTask,
+    PoetryVideoTask,
+    SimpleImageTask,
+]
 
 # 用于 TaskManager.load()：根据 task_type 字段选择正确的模型类
 _TASK_TYPE_MAP: dict[str, type[BaseTaskState]] = {
     TaskType.SIMPLE: SimpleVideoTask,
     TaskType.CREATIVE: CreativeVideoTask,
+    TaskType.PRODUCT: ProductVideoTask,
     TaskType.MANUSCRIPT: ManuscriptVideoTask,
     TaskType.ANCHOR: AnchorVideoTask,
     TaskType.POETRY: PoetryVideoTask,

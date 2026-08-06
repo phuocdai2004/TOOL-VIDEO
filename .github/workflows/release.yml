@@ -55,7 +55,25 @@ jobs:
 
       - name: Smoke test (start container, probe endpoints)
         run: |
-          docker run -d -p 8765:8765 -e AGNES_API_KEY=smoke-test-key --name fsv-smoke ${{ env.IMAGE_NAME }}:smoke
+          cleanup() {
+            docker rm -f fsv-smoke fsv-smoke-mongo >/dev/null 2>&1 || true
+            docker network rm fsv-smoke-network >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          docker network create fsv-smoke-network
+          docker run -d --network fsv-smoke-network --name fsv-smoke-mongo mongo:8.0
+          for i in $(seq 1 24); do
+            docker exec fsv-smoke-mongo mongosh --quiet --eval "db.runCommand({ ping: 1 }).ok" >/dev/null 2>&1 && break
+            sleep 2
+          done
+          docker run -d -p 8765:8765 \
+            --network fsv-smoke-network \
+            -e AGNES_API_KEY=smoke-test-key \
+            -e MONGODB_URI='mongodb://fsv-smoke-mongo:27017/?serverSelectionTimeoutMS=5000' \
+            -e MONGODB_DB=agnes_video_smoke \
+            --name fsv-smoke \
+            ${{ env.IMAGE_NAME }}:smoke
           code=""
           for i in $(seq 1 20); do
             code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8765/ || true)
@@ -63,11 +81,13 @@ jobs:
             sleep 2
           done
           echo "GET / => $code"
-          cfg=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8765/api/config)
-          echo "GET /api/config => $cfg"
+          auth=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8765/api/auth/status || true)
+          echo "GET /api/auth/status => $auth"
           docker logs fsv-smoke 2>&1 | tail -20
-          docker stop fsv-smoke && docker rm fsv-smoke
-          if [ "$code" != "200" ]; then echo "SMOKE TEST FAILED"; exit 1; fi
+          if [ "$code" != "200" ] || [ "$auth" != "200" ]; then
+            echo "SMOKE TEST FAILED"
+            exit 1
+          fi
 
       # ── GitHub Container Registry（GHCR）──
       # GHCR 命名空间只有 user / org（ghcr.io/OWNER/IMAGE），不存在"仓库级路径"。

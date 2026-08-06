@@ -18,15 +18,45 @@ services:
   agnes:
     # GHCR 与 Docker Hub 二选一：
     #   image: ghcr.io/phuocdai2004/tool-video:5.2.0
-    image: ghcr.io/phuocdai2004/tool-video:5.2.0
+    image: ${APP_IMAGE:-ghcr.io/phuocdai2004/tool-video:latest}
     container_name: agnes-video
     ports:
       - "8765:8765"
     environment:
       - AGNES_API_KEY=${AGNES_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/?serverSelectionTimeoutMS=5000}
+      - MONGODB_DB=${MONGODB_DB:-agnes_video}
+      - ALLOW_REGISTRATION=${ALLOW_REGISTRATION:-true}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-}
+      - AUTH_COOKIE_SECURE=${AUTH_COOKIE_SECURE:-false}
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-http://localhost:8765}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM=${SMTP_FROM:-}
+      - SMTP_USE_TLS=${SMTP_USE_TLS:-true}
+      - SMTP_USE_SSL=${SMTP_USE_SSL:-false}
+    depends_on:
+      mongodb:
+        condition: service_healthy
     volumes:
       # 工作空间（任务目录、final_video.mp4、uploads/）
       - ./agnes_data/working:/app/.working_dir
       # 配置（API Key、工作空间列表等设置）
       - ./agnes_data/config:/app/.agnes_config
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:8.0
+    container_name: agnes-mongodb
+    command: ["mongod", "--bind_ip_all"]
+    volumes:
+      - ./agnes_data/mongodb:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
     restart: unless-stopped

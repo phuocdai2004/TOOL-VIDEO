@@ -226,10 +226,10 @@ class TestDefaultSubtitleStyle:
         style = get_default_subtitle_style()
         assert style.position == ("center", "bottom-80")
 
-    def test_default_font_is_cjk(self):
-        from core.config import get_default_subtitle_style, DEFAULT_CHINESE_FONT
+    def test_default_font_supports_vietnamese(self):
+        from core.config import get_default_subtitle_style, DEFAULT_SUBTITLE_FONT
         style = get_default_subtitle_style()
-        assert style.font == DEFAULT_CHINESE_FONT
+        assert style.font == DEFAULT_SUBTITLE_FONT
 
     def test_default_fontsize(self):
         from core.config import get_default_subtitle_style

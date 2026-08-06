@@ -28,6 +28,19 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:8.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      MONGODB_URI: mongodb://127.0.0.1:27017/?serverSelectionTimeoutMS=5000
+      MONGODB_DB: agnes_video_ci
     # 如需验证多版本兼容性，把 python-version 改为矩阵即可，例如：
     # strategy:
     #   fail-fast: false

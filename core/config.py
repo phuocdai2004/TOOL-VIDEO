@@ -171,6 +171,61 @@ def get_api_key_source() -> str:
 
 
 # ═══════════════════════════════════════════════════
+# Gemini product-analysis configuration
+# ═══════════════════════════════════════════════════
+
+DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
+RETIRED_GEMINI_MODELS = {"gemini-2.5-flash"}
+
+
+def get_gemini_api_key() -> str:
+    """Return the Gemini key without exposing it to the browser."""
+    env_key = os.environ.get("GOOGLE_API_KEY", "") or os.environ.get("GEMINI_API_KEY", "")
+    if env_key:
+        return env_key
+    return load_config().get("gemini_api_key", "")
+
+
+def set_gemini_api_key(key: str, model: str = "") -> None:
+    """Persist the Gemini key and optional model in the protected config file."""
+    config = load_config()
+    config["gemini_api_key"] = key.strip()
+    if model.strip():
+        config["gemini_model"] = model.strip()
+    save_config(config)
+
+
+def delete_gemini_api_key() -> bool:
+    """Remove only the persisted Gemini key, preserving other app settings."""
+    config = load_config()
+    if "gemini_api_key" not in config:
+        return False
+    del config["gemini_api_key"]
+    save_config(config)
+    return True
+
+
+def get_gemini_api_key_source() -> str:
+    """Return ``env``, ``config``, or ``none`` for the Gemini credential."""
+    if os.environ.get("GOOGLE_API_KEY", "") or os.environ.get("GEMINI_API_KEY", ""):
+        return "env"
+    if load_config().get("gemini_api_key"):
+        return "config"
+    return "none"
+
+
+def get_gemini_model() -> str:
+    """Return the configured multimodal Gemini model."""
+    env_model = os.environ.get("GEMINI_MODEL", "").strip()
+    if env_model:
+        return env_model
+    configured_model = load_config().get("gemini_model", "").strip()
+    if not configured_model or configured_model in RETIRED_GEMINI_MODELS:
+        return DEFAULT_GEMINI_MODEL
+    return configured_model
+
+
+# ═══════════════════════════════════════════════════
 # 工作目录管理（多工作目录，同时仅一个 active）
 # ═══════════════════════════════════════════════════
 
