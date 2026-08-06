@@ -4,8 +4,9 @@ services:
     runtime: image
     plan: free
     region: singapore
-    image: ghcr.io/phuocdai2004/tool-video:latest
-    autoDeploy: false
+    image:
+      url: ghcr.io/phuocdai2004/tool-video:latest
+    autoDeployTrigger: "off"
     healthCheckPath: /api/auth/status
     envVars:
       - key: MONGODB_URI
