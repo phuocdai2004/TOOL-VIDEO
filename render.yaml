@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: tool-video-api-phuocdai2004
+    runtime: image
+    plan: free
+    region: singapore
+    image: ghcr.io/phuocdai2004/tool-video:latest
+    autoDeploy: false
+    healthCheckPath: /api/auth/status
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: agnes_video
+      - key: AGNES_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: ALLOW_REGISTRATION
+        value: "true"
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: AUTH_COOKIE_SECURE
+        value: "true"
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: SMTP_USE_TLS
+        value: "true"
+      - key: SMTP_USE_SSL
+        value: "false"

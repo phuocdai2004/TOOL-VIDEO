@@ -1,6 +1,8 @@
 # 版本控制与本地环境（不进镜像）
 .git/
 .gitignore
+.env
+.env.*
 .venv/
 .workbuddy/
 .agnes_config/

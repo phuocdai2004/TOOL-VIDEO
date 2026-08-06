@@ -67,6 +67,23 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Trigger Render deployment
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          IMAGE_URL: ${{ steps.image.outputs.value }}:sha-${{ steps.image.outputs.revision }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK is not configured; skipping Render deployment."
+            exit 0
+          fi
+          encoded_image=$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["IMAGE_URL"], safe=""))')
+          separator='?'
+          case "$RENDER_DEPLOY_HOOK" in
+            *\?*) separator='&' ;;
+          esac
+          curl --fail --show-error --silent --retry 3 \
+            -X POST "${RENDER_DEPLOY_HOOK}${separator}imgURL=${encoded_image}"
+
   deploy-ssh:
     name: Deploy to server
     needs: build-and-push
