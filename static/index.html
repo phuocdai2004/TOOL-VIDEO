@@ -3301,7 +3301,7 @@ const T = {
     authBackToLogin: '返回登录', authSendResetLink: '发送重置链接', authForgotSent: '如果邮箱存在，重置链接已发送。',
     authResetTitle: '设置新密码', authNewPassword: '新密码', authConfirmPassword: '确认密码',
     authResetPassword: '重置密码', authPasswordMismatch: '两次输入的密码不一致', authResetSuccess: '密码已重置，请重新登录。',
-    authGenericError: '无法完成身份验证', authSessionExpired: '登录已过期，请重新登录。',
+    authGenericError: '无法完成身份验证', authBackendUnavailable: '后端服务尚未就绪，请稍后再试。', authSessionExpired: '登录已过期，请重新登录。',
     adminTitle: '用户管理', adminUsers: '用户', adminTasks: '任务', adminLegacy: '旧任务',
     adminRole: '角色', adminStatus: '状态', adminSave: '保存', adminActive: '正常',
     adminDisabled: '已锁定', adminLoadFailed: '无法加载管理数据', adminSaved: '账号已更新',
@@ -3483,7 +3483,7 @@ const T = {
     authBackToLogin: 'Quay lại đăng nhập', authSendResetLink: 'Gửi liên kết khôi phục', authForgotSent: 'Nếu email tồn tại, liên kết đặt lại mật khẩu đã được gửi.',
     authResetTitle: 'Đặt mật khẩu mới', authNewPassword: 'Mật khẩu mới', authConfirmPassword: 'Nhập lại mật khẩu',
     authResetPassword: 'Đặt lại mật khẩu', authPasswordMismatch: 'Hai mật khẩu không trùng nhau', authResetSuccess: 'Đã đặt lại mật khẩu. Hãy đăng nhập lại.',
-    authGenericError: 'Không thể xác thực', authSessionExpired: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
+    authGenericError: 'Không thể xác thực', authBackendUnavailable: 'Backend chưa sẵn sàng. Vui lòng thử lại sau.', authSessionExpired: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
     adminTitle: 'Quản lý người dùng', adminUsers: 'Người dùng', adminTasks: 'Tác vụ', adminLegacy: 'Tác vụ cũ',
     adminRole: 'Vai trò', adminStatus: 'Trạng thái', adminSave: 'Lưu', adminActive: 'Hoạt động',
     adminDisabled: 'Đã khóa', adminLoadFailed: 'Không thể tải dữ liệu quản trị', adminSaved: 'Đã cập nhật tài khoản',
@@ -3607,7 +3607,7 @@ const T = {
     authBackToLogin: 'Back to sign in', authSendResetLink: 'Send recovery link', authForgotSent: 'If the email exists, a reset link has been sent.',
     authResetTitle: 'Set a new password', authNewPassword: 'New password', authConfirmPassword: 'Confirm password',
     authResetPassword: 'Reset password', authPasswordMismatch: 'Passwords do not match', authResetSuccess: 'Password reset. Please sign in again.',
-    authGenericError: 'Authentication failed', authSessionExpired: 'Your session expired. Please sign in again.',
+    authGenericError: 'Authentication failed', authBackendUnavailable: 'The backend is not ready yet. Please try again later.', authSessionExpired: 'Your session expired. Please sign in again.',
     adminTitle: 'User management', adminUsers: 'Users', adminTasks: 'Tasks', adminLegacy: 'Legacy tasks',
     adminRole: 'Role', adminStatus: 'Status', adminSave: 'Save', adminActive: 'Active',
     adminDisabled: 'Disabled', adminLoadFailed: 'Could not load admin data', adminSaved: 'Account updated',
@@ -5238,6 +5238,18 @@ function getResponseError(data, fallbackKey = 'authGenericError') {
   return t(fallbackKey);
 }
 
+async function readAuthJson(response) {
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.toLowerCase().includes('application/json')) {
+    throw new Error(t('authBackendUnavailable'));
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error(t('authBackendUnavailable'));
+  }
+}
+
 function lockApplication(status = {}) {
   authUser = null;
   authStatus = status;
@@ -5270,7 +5282,7 @@ function unlockApplication(user) {
 async function bootstrapAuth() {
   try {
     const statusResponse = await fetch('/api/auth/status', {cache: 'no-store'});
-    authStatus = await statusResponse.json();
+    authStatus = await readAuthJson(statusResponse);
     if (!statusResponse.ok) throw new Error(getResponseError(authStatus));
     const resetToken = new URLSearchParams(window.location.search).get('reset_token');
     if (resetToken) {
@@ -5283,7 +5295,7 @@ async function bootstrapAuth() {
       lockApplication(authStatus);
       return false;
     }
-    const me = await meResponse.json();
+    const me = await readAuthJson(meResponse);
     unlockApplication(me.user);
     return true;
   } catch (error) {
@@ -5312,7 +5324,7 @@ async function submitAuth(event, mode) {
   }
   try {
     const response = await fetch(`/api/auth/${mode}`, {method: 'POST', body: payload});
-    const data = await response.json();
+    const data = await readAuthJson(response);
     if (!response.ok) throw new Error(getResponseError(data));
     window.location.reload();
   } catch (error) {
@@ -5334,7 +5346,7 @@ async function submitForgotPassword(event) {
   payload.append('email', document.getElementById('auth-forgot-email').value.trim());
   try {
     const response = await fetch('/api/auth/forgot-password', {method: 'POST', body: payload});
-    const data = await response.json();
+    const data = await readAuthJson(response);
     if (!response.ok) throw new Error(getResponseError(data));
     messageNode.textContent = t('authForgotSent');
   } catch (error) {
@@ -5363,7 +5375,7 @@ async function submitResetPassword(event) {
   payload.append('password', password);
   try {
     const response = await fetch('/api/auth/reset-password', {method: 'POST', body: payload});
-    const data = await response.json();
+    const data = await readAuthJson(response);
     if (!response.ok) throw new Error(getResponseError(data));
     window.history.replaceState({}, '', window.location.pathname);
     form.reset();
