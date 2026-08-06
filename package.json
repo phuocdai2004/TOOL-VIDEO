@@ -10,7 +10,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "node bin/cli.js"
+    "start": "node bin/cli.js",
+    "build:css": "npx --yes tailwindcss@3.4.17 -i ./tailwind.input.css -o ./static/tailwind.css --content ./static/index.html --minify"
   },
   "keywords": [
     "video",
