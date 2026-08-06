@@ -69,8 +69,17 @@ def resolve_font_path(font: str) -> str:
 
     normalized = font.strip().lower()
     system_font = _SYSTEM_FONT_PATHS.get(normalized)
-    if system_font and os.path.exists(system_font):
-        return system_font
+    if system_font:
+        if os.path.exists(system_font):
+            return system_font
+        fallback = os.path.join(font_dir(), DEFAULT_CHINESE_FONT)
+        if os.path.exists(fallback):
+            logger.warning(
+                "System font '%s' is unavailable, falling back to %s",
+                font,
+                DEFAULT_CHINESE_FONT,
+            )
+            return fallback
 
     # 检查是否为已知的非 CJK 字体（向后兼容：旧任务的 font 可能仍为 "Arial"）
     if normalized in _NON_CJK_FONTS:

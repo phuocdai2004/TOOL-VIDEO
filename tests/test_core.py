@@ -205,6 +205,20 @@ class TestResolveFontPath:
         result = resolve_font_path("arial")
         assert DEFAULT_CHINESE_FONT in result
 
+    def test_missing_system_font_uses_bundled_fallback(self, monkeypatch, tmp_path):
+        import core.config as config
+
+        fallback = tmp_path / config.DEFAULT_CHINESE_FONT
+        fallback.write_bytes(b"font-placeholder")
+        monkeypatch.setattr(config, "font_dir", lambda: str(tmp_path))
+        monkeypatch.setitem(
+            config._SYSTEM_FONT_PATHS,
+            "ci-only-font",
+            str(tmp_path / "missing-system-font.ttf"),
+        )
+
+        assert config.resolve_font_path("CI-only-font") == str(fallback)
+
     def test_system_font_passthrough(self):
         from core.config import resolve_font_path
         result = resolve_font_path("NotoSansCJK-Regular")
