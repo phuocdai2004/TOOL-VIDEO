@@ -13,7 +13,7 @@ from typing import List, Optional
 import re as _re
 
 import srt as srt_lib
-from moviepy import AudioFileClip, CompositeVideoClip, VideoFileClip, concatenate_videoclips
+from moviepy import AudioFileClip, CompositeVideoClip, VideoFileClip
 
 from models.task import SubtitleStyle
 
@@ -24,6 +24,11 @@ _AUDIO_CODEC = "aac"
 _AUDIO_BITRATE = "192k"
 _AUDIO_FPS = 44100
 _VIDEO_FPS = 30
+_VIDEO_PRESET = os.environ.get("VIDEO_FFMPEG_PRESET", "veryfast")
+try:
+    _VIDEO_THREADS = max(1, int(os.environ.get("VIDEO_FFMPEG_THREADS", "1")))
+except ValueError:
+    _VIDEO_THREADS = 1
 
 
 class VideoConcatenator:
@@ -51,47 +56,56 @@ class VideoConcatenator:
             logger.info("[Compositor] Single video, copied directly")
             return output_path
 
-        clips = [VideoFileClip(p) for p in video_paths]
-        # L7: 统一缩放到第一个视频的分辨率，避免 compose 模式 pad 黑边
-        target_w, target_h = clips[0].w, clips[0].h
-        resized_clips = []
-        for c in clips:
-            if c.w != target_w or c.h != target_h:
-                resized_clips.append(c.resized((target_w, target_h)))
-            else:
-                resized_clips.append(c)
-        final = None
+        missing = [path for path in video_paths if not os.path.isfile(path)]
+        if missing:
+            raise RuntimeError(f"Video file not found: {missing[0]}")
+
+        # The concat demuxer reads one clip at a time. This prevents MoviePy
+        # from retaining every decoded clip on memory-constrained instances.
+        concat_list = f"{output_path}.concat.txt"
         try:
-            final = concatenate_videoclips(resized_clips, method="compose")
-            final.write_videofile(
-                output_path,
-                codec="libx264",
-                audio_codec=_AUDIO_CODEC,
-                audio_bitrate=_AUDIO_BITRATE,
-                audio_fps=_AUDIO_FPS,
-                fps=_VIDEO_FPS,
-                logger="bar",
-            )
+            with open(concat_list, "w", encoding="utf-8", newline="\n") as f:
+                for path in video_paths:
+                    absolute_path = os.path.abspath(path).replace("\\", "/")
+                    escaped_path = absolute_path.replace("'", "'\\''")
+                    f.write(f"file '{escaped_path}'\n")
+
+            base_cmd = [
+                "ffmpeg", "-hide_banner", "-loglevel", "error", "-nostats", "-y",
+                "-fflags", "+genpts", "-f", "concat", "-safe", "0",
+                "-i", concat_list, "-map", "0:v:0", "-map", "0:a?",
+            ]
+            copy_cmd = [
+                *base_cmd, "-c", "copy", "-movflags", "+faststart", output_path,
+            ]
+            try:
+                VideoConcatenator._run_ffmpeg(copy_cmd, "stream-copy concat")
+            except RuntimeError as copy_error:
+                logger.warning(
+                    "[Compositor] Stream-copy concat failed; retrying with a "
+                    "single-thread encoder: %s", copy_error,
+                )
+                if os.path.exists(output_path):
+                    os.remove(output_path)
+                encode_cmd = [
+                    *base_cmd,
+                    "-c:v", "libx264", "-preset", _VIDEO_PRESET,
+                    "-threads", str(_VIDEO_THREADS), "-pix_fmt", "yuv420p",
+                    "-r", str(_VIDEO_FPS),
+                    "-c:a", _AUDIO_CODEC, "-b:a", _AUDIO_BITRATE,
+                    "-ar", str(_AUDIO_FPS),
+                    "-movflags", "+faststart", output_path,
+                ]
+                VideoConcatenator._run_ffmpeg(encode_cmd, "low-memory concat")
         finally:
-            # P6: 关闭所有资源（clips + resized_clips + final）
-            # 注意：不要用 `if c not in clips` 来去重 —— moviepy 2.x 的
-            # Clip.__eq__ 逐帧比较，write_videofile 后 readers 处于已消费
-            # 状态会抛 AttributeError。close() 本身是幂等的，直接全量关闭。
-            for c in clips:
+            if os.path.exists(concat_list):
                 try:
-                    c.close()
-                except Exception:
+                    os.remove(concat_list)
+                except OSError:
                     pass
-            for c in resized_clips:
-                try:
-                    c.close()
-                except Exception:
-                    pass
-            if final is not None:
-                try:
-                    final.close()
-                except Exception:
-                    pass
+
+        if not os.path.isfile(output_path) or os.path.getsize(output_path) == 0:
+            raise RuntimeError("FFmpeg did not create the concatenated video")
 
         logger.info(f"[Compositor] Concatenation complete: {output_path}")
         return output_path
@@ -353,7 +367,7 @@ class VideoConcatenator:
                  "-i", silent_path,
                  "-vf", f"tpad=stop_mode=clone:stop_duration={pad_dur:.2f}",
                  "-c:v", "libx264", "-pix_fmt", "yuv420p",
-                 "-preset", "fast",
+                 "-preset", _VIDEO_PRESET, "-threads", str(_VIDEO_THREADS),
                  extend_path],
                 desc=f"extend video by {pad_dur:.1f}s (freeze last frame)",
             )
@@ -388,22 +402,17 @@ class VideoConcatenator:
             )
             audio_input = vol_path
 
-        # ── Step 5: moviepy 合成视频+音频+字幕 ──
+        # ── Step 5: render subtitles only, then mux audio with ffmpeg ──
         video_clip = None
-        audio_clip_obj = None
+        rendered_video = video_input
         try:
             video_clip = VideoFileClip(video_input)
-            audio_clip_obj = AudioFileClip(audio_input)
-
-            # 掐头去尾确保完全对齐
-            target_dur = min(video_clip.duration, audio_clip_obj.duration)
-            video_clip = video_clip.subclipped(0, target_dur)
-            audio_clip_obj = audio_clip_obj.subclipped(0, target_dur)
-
-            video_with_audio = video_clip.with_audio(audio_clip_obj)
+            target_dur = video_clip.duration
 
             # ── 叠加字幕 ──
             if srt_path and os.path.exists(srt_path) and subtitle_style:
+                final = None
+                subs_clips = []
                 try:
                     per_entry_styles = None
                     if subtitle_styles_path and os.path.exists(subtitle_styles_path):
@@ -417,55 +426,54 @@ class VideoConcatenator:
                         subtitle_styles=per_entry_styles,
                     )
                     if subs_clips:
-                        final = CompositeVideoClip([video_with_audio, *subs_clips])
-                        final.write_videofile(
-                            output_path,
-                            codec="libx264",
-                            audio_codec=_AUDIO_CODEC,
-                            audio_bitrate=_AUDIO_BITRATE,
-                            audio_fps=_AUDIO_FPS,
-                            fps=_VIDEO_FPS,
-                            logger="bar",
+                        rendered_video = output_path.replace(
+                            ".mp4", "_subtitled_silent.mp4"
                         )
-                        final.close()
-                    else:
-                        video_with_audio.write_videofile(
-                            output_path,
+                        tmp_files.append(rendered_video)
+                        final = CompositeVideoClip([
+                            video_clip.without_audio(), *subs_clips,
+                        ])
+                        final.write_videofile(
+                            rendered_video,
                             codec="libx264",
-                            audio_codec=_AUDIO_CODEC,
-                            audio_bitrate=_AUDIO_BITRATE,
-                            audio_fps=_AUDIO_FPS,
+                            audio=False,
                             fps=_VIDEO_FPS,
+                            preset=_VIDEO_PRESET,
+                            threads=_VIDEO_THREADS,
                             logger="bar",
                         )
                 except Exception as e:
                     logger.warning(
-                        f"[Compositor] Subtitle overlay failed: {e}, writing without subtitles"
+                        f"[Compositor] Subtitle overlay failed: {e}, muxing without subtitles"
                     )
-                    video_with_audio.write_videofile(
-                        output_path,
-                        codec="libx264",
-                        audio_codec=_AUDIO_CODEC,
-                        audio_bitrate=_AUDIO_BITRATE,
-                        audio_fps=_AUDIO_FPS,
-                        fps=_VIDEO_FPS,
-                        logger="bar",
-                    )
-            else:
-                video_with_audio.write_videofile(
-                    output_path,
-                    codec="libx264",
-                    audio_codec=_AUDIO_CODEC,
-                    audio_bitrate=_AUDIO_BITRATE,
-                    audio_fps=_AUDIO_FPS,
-                    fps=_VIDEO_FPS,
-                    logger="bar",
-                )
+                    rendered_video = video_input
+                finally:
+                    if final is not None:
+                        final.close()
+                    for subtitle_clip in subs_clips:
+                        try:
+                            subtitle_clip.close()
+                        except Exception:
+                            pass
+
+            if video_clip is not None:
+                video_clip.close()
+                video_clip = None
+
+            VideoConcatenator._run_ffmpeg(
+                [
+                    "ffmpeg", "-hide_banner", "-loglevel", "error", "-nostats", "-y",
+                    "-i", rendered_video, "-i", audio_input,
+                    "-map", "0:v:0", "-map", "1:a:0",
+                    "-c:v", "copy", "-c:a", _AUDIO_CODEC,
+                    "-b:a", _AUDIO_BITRATE, "-ar", str(_AUDIO_FPS),
+                    "-shortest", "-movflags", "+faststart", output_path,
+                ],
+                desc="mux narration audio",
+            )
         finally:
             if video_clip is not None:
                 video_clip.close()
-            if audio_clip_obj is not None:
-                audio_clip_obj.close()
             for tmp in tmp_files:
                 if os.path.exists(tmp):
                     try:
@@ -612,6 +620,8 @@ class VideoConcatenator:
                         audio_bitrate=_AUDIO_BITRATE,
                         audio_fps=_AUDIO_FPS,
                         fps=_VIDEO_FPS,
+                        preset=_VIDEO_PRESET,
+                        threads=_VIDEO_THREADS,
                         logger="bar",
                     )
                     final.close()
@@ -623,6 +633,8 @@ class VideoConcatenator:
                         audio_bitrate=_AUDIO_BITRATE,
                         audio_fps=_AUDIO_FPS,
                         fps=_VIDEO_FPS,
+                        preset=_VIDEO_PRESET,
+                        threads=_VIDEO_THREADS,
                         logger="bar",
                     )
             else:
@@ -633,6 +645,8 @@ class VideoConcatenator:
                     audio_bitrate=_AUDIO_BITRATE,
                     audio_fps=_AUDIO_FPS,
                     fps=_VIDEO_FPS,
+                    preset=_VIDEO_PRESET,
+                    threads=_VIDEO_THREADS,
                     logger="bar",
                 )
         finally:

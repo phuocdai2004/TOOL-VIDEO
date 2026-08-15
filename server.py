@@ -122,7 +122,10 @@ TASK_TYPE_WEIGHTS = {
     TaskType.POETRY: 3,       # 1 Chat(拆分) + N*Video + N*合成
     TaskType.IMAGE: 1,        # 1 image submit
 }
-MAX_CONCURRENT_WEIGHT = _AGNES_RATE_LIMIT // 2  # 默认 10
+MAX_CONCURRENT_WEIGHT = max(
+    4,
+    int(os.environ.get("PIPELINE_MAX_CONCURRENT_WEIGHT", _AGNES_RATE_LIMIT // 2)),
+)
 
 
 class WeightedSemaphore:

@@ -15,6 +15,12 @@ services:
         value: agnes_video
       - key: AGNES_API_KEY
         sync: false
+      - key: PIPELINE_MAX_CONCURRENT_WEIGHT
+        value: "4"
+      - key: VIDEO_FFMPEG_THREADS
+        value: "1"
+      - key: VIDEO_FFMPEG_PRESET
+        value: veryfast
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
