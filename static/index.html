@@ -1358,6 +1358,31 @@
   .vp-modal,
   .vp-card { border-radius: 6px !important; }
 
+  .result-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+
+  .result-download {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid rgba(190, 242, 100, 0.45);
+    border-radius: 6px;
+    background: var(--studio-lime);
+    color: #070a0c;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .result-download:hover { background: #d4ff63; }
+  .result-download svg { width: 18px; height: 18px; }
+
   .vp-modal { background: #101419; border-color: var(--studio-line-strong); }
   .vp-card.selected { border-color: var(--studio-lime); box-shadow: 0 0 0 1px var(--studio-lime); }
   .vp-tab.active, .vp-btn-confirm { color: #080a0d; background: var(--studio-lime); }
@@ -1377,6 +1402,14 @@
     .console-idle { display: none; }
     .signal-stage { aspect-ratio: 16 / 7; max-height: 280px; }
     .code-terminal { min-height: 220px; max-height: 260px; }
+  }
+
+  @media (max-width: 640px) {
+    .result-download { width: 100%; }
+    .task-list-card { align-items: stretch; flex-direction: column; gap: 12px; }
+    .task-list-actions { width: 100%; margin-left: 0; flex-wrap: wrap; }
+    .task-list-actions > button,
+    .task-list-actions > a { flex: 1 1 auto; min-height: 44px; }
   }
 
   @media (max-width: 640px) {
@@ -3126,6 +3159,11 @@
     <div id="result-area" class="hidden mt-4 p-4 glass-card rounded-lg">
       <p class="text-green-400 text-sm font-medium mb-2" data-i18n="videoComplete">视频生成完成!</p>
       <video id="result-video" controls class="w-full rounded-lg max-h-96"></video>
+      <div class="result-actions">
+        <a id="result-download" class="result-download hidden" href="#" download>
+          <i data-lucide="download"></i><span data-i18n="downloadVideo">Tải video về máy</span>
+        </a>
+      </div>
     </div>
   </div>
   <div id="code-terminal" class="code-terminal" aria-hidden="true">
@@ -3372,7 +3410,7 @@ const T = {
     cStepEndFrameGen: '尾帧生成', cStepVideoGen: '视频生成', cStepAudio: '音频生成', cStepSubtitle: '字幕生成', cStepConcat: '视频拼接',
     // Progress steps — manuscript
     mStepSplit: '文本拆分', mStepScenePrompts: '场景Prompt', mStepVideoGen: '视频生成', mStepAudio: '音频生成', mStepSubtitle: '字幕生成', mStepConcat: '视频拼接',
-    videoComplete: '视频生成完成!', taskComplete: '任务已完成',
+    videoComplete: '视频生成完成!', taskComplete: '任务已完成', downloadVideo: '下载视频',
     taskId: '任务ID', dir: '目录', idea_: '创意', sceneCount: '场景数', chainingMode_: '串联模式',
     // v3.x scene config
     sceneConfig: '场景配置', durationSource: '场景信息获取方式',
@@ -3548,7 +3586,7 @@ const T = {
     cStepCharacterRef: 'Ảnh nhân vật', cStepScript: 'Viết kịch bản', cStepEndFramePrompts: 'Prompt khung cuối',
     cStepEndFrameGen: 'Tạo khung cuối', cStepVideoGen: 'Tạo video', cStepAudio: 'Tạo âm thanh', cStepSubtitle: 'Tạo phụ đề', cStepConcat: 'Ghép video',
     mStepSplit: 'Tách văn bản', mStepScenePrompts: 'Prompt cảnh', mStepVideoGen: 'Tạo video', mStepAudio: 'Tạo âm thanh', mStepSubtitle: 'Tạo phụ đề', mStepConcat: 'Ghép video',
-    videoComplete: 'Tạo video hoàn tất!', taskComplete: 'Tác vụ đã hoàn tất',
+    videoComplete: 'Tạo video hoàn tất!', taskComplete: 'Tác vụ đã hoàn tất', downloadVideo: 'Tải video về máy',
     taskId: 'ID tác vụ', dir: 'Thư mục', idea_: 'Ý tưởng', sceneCount: 'Số cảnh', chainingMode_: 'Kiểu nối cảnh',
     sceneConfig: 'Cấu hình cảnh', durationSource: 'Nguồn thông tin cảnh', sourceManual: 'Thiết lập thủ công', sourcePrompt: 'Trích từ ý tưởng',
     sourceManualHint: 'Tự đặt số cảnh và thời lượng mỗi cảnh', sourcePromptHint: 'AI sẽ phân tích số cảnh và thời lượng từ ý tưởng',
@@ -3675,7 +3713,7 @@ const T = {
     cStepCharacterRef: 'Character Ref', cStepScript: 'Script', cStepEndFramePrompts: 'End Frame Prompts',
     cStepEndFrameGen: 'End Frame Gen', cStepVideoGen: 'Video Gen', cStepAudio: 'Audio', cStepSubtitle: 'Subtitle', cStepConcat: 'Concatenate',
     mStepSplit: 'Text Split', mStepScenePrompts: 'Scene Prompts', mStepVideoGen: 'Video Gen', mStepAudio: 'Audio', mStepSubtitle: 'Subtitle', mStepConcat: 'Concatenate',
-    videoComplete: 'Video generation complete!', taskComplete: 'Task completed',
+    videoComplete: 'Video generation complete!', taskComplete: 'Task completed', downloadVideo: 'Download video',
     taskId: 'Task ID', dir: 'Directory', idea_: 'Idea', sceneCount: 'Scenes', chainingMode_: 'Chaining',
     sceneConfig: 'Scene Config', durationSource: 'Scene Info Source',
     sourceManual: 'Manual', sourcePrompt: 'Extract from Idea',
@@ -7226,10 +7264,16 @@ function markCompletedStepsFromState(state) {
   });
 }
 
-function showResult(videoPath) {
+function showResult(videoPath, taskId = currentTaskId) {
   document.getElementById('result-area').classList.remove('hidden');
-  if (videoPath && currentTaskId) {
-    document.getElementById('result-video').src = '/api/video/' + currentTaskId;
+  const download = document.getElementById('result-download');
+  if (videoPath && taskId) {
+    document.getElementById('result-video').src = '/api/video/' + encodeURIComponent(taskId);
+    download.href = '/api/video/' + encodeURIComponent(taskId) + '?download=1';
+    download.setAttribute('download', `tool-video-${taskId}.mp4`);
+    download.classList.remove('hidden');
+  } else {
+    download.classList.add('hidden');
   }
 }
 
@@ -7277,7 +7321,7 @@ async function restoreProgressFromTask(taskId) {
       document.getElementById('progress-bar').style.width = '100%';
       document.getElementById('progress-pct').textContent = '100%';
       steps.forEach(s => markStepCompleted(s.key));
-      showResult(state.final_video_file);
+      showResult(state.final_video_file, taskId);
     }
   } catch(e) {}
 }
@@ -7316,25 +7360,30 @@ async function loadTaskList() {
       const tidAttr = escapeAttr(task.task_id);
       const btnAction = isCompleted ? `viewTask('${tidAttr}')` : (isRunning ? `viewRunningTask('${tidAttr}')` : `resumeTask('${tidAttr}')`);
       const stopBtn = isRunning ? `<button onclick="stopTaskById('${tidAttr}')" class="text-xs px-3 py-1.5 bg-red-700 hover:bg-red-600 text-red-100 rounded-lg transition">${t('btnStop')}</button>` : '';
+      const downloadBtn = isCompleted && task.task_type !== 'image'
+        ? `<a href="/api/video/${encodeURIComponent(task.task_id)}?download=1" download="tool-video-${tidAttr}.mp4" class="inline-flex items-center justify-center gap-1.5 text-xs px-3 py-1.5 bg-lime-400 hover:bg-lime-300 text-gray-950 rounded-lg font-semibold transition" title="${escapeAttr(t('downloadVideo'))}"><i data-lucide="download" class="w-4 h-4"></i><span>${t('downloadVideo')}</span></a>`
+        : '';
       // pending/failed 状态额外添加"查看"按钮（查看产物）
       const viewBtn = (!isCompleted && !isRunning) ? `<button onclick="viewTask('${tidAttr}')" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition">${t('btnView')}</button>` : '';
       const typeBadge = `<span class="text-xs px-2 py-0.5 rounded-full ${typeColors[task.task_type] || 'bg-gray-800 text-gray-400'}">${escapeHtml(typeLabels[task.task_type] || task.task_type)}</span>`;
       const desc = task.product_name || task.idea || task.prompt || (task.manuscript_text || '').substring(0, 80) || (task.script_text || '').substring(0, 80);
       const extra = task.scene_count ? ` · ${task.scene_count}${t('sceneUnit')}` : (task.paragraph_count ? ` · ${task.paragraph_count}${t('paraUnit')}` : '');
-      return `<div class="glass-card rounded-xl p-4 flex items-center justify-between">
+      return `<div class="task-list-card glass-card rounded-xl p-4 flex items-center justify-between">
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 mb-1">${typeBadge}<p class="text-sm font-medium truncate">${escapeHtml(task.creative_name || task.task_id)}</p></div>
           <p class="text-xs text-gray-500 mt-0.5">${escapeHtml(task.task_id)}${extra}</p>
           ${desc ? `<p class="text-xs text-gray-600 mt-1 truncate max-w-xs">${escapeHtml(desc)}</p>` : ''}
         </div>
-        <div class="flex items-center gap-3 ml-3">
+        <div class="task-list-actions flex items-center gap-3 ml-3">
           <span class="text-xs ${statusColors[task.status] || 'text-gray-400'}">${statusLabels[task.status] || task.status}</span>
+          ${downloadBtn}
           ${viewBtn}
           <button onclick="${btnAction}" class="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg transition">${btnLabel}</button>
           ${stopBtn}
         </div>
       </div>`;
     }).join('');
+    if (window.lucide) lucide.createIcons();
   } catch(e) {
     container.innerHTML = '<p class="text-red-400 text-sm">' + t('loadFailed') + '</p>';
   }
@@ -7496,8 +7545,7 @@ function showTaskDetail(taskId, state) {
     </div>`;
 
   if (state.final_video_file) {
-    document.getElementById('result-area').classList.remove('hidden');
-    document.getElementById('result-video').src = '/api/video/' + taskId;
+    showResult(state.final_video_file, taskId);
   }
 
   // 加载中间产物

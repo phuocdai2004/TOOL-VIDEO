@@ -1174,7 +1174,7 @@ async def get_task(task_id: str):
 
 
 @app.get("/api/video/{task_id}")
-async def serve_video(task_id: str):
+async def serve_video(task_id: str, download: bool = False):
     dir_name = _find_dir_name(task_id)
     tm = TaskManager(task_id, dir_name=dir_name)
     state = tm.load()
@@ -1191,7 +1191,11 @@ async def serve_video(task_id: str):
         raise HTTPException(status_code=403, detail="Access denied")
     if not os.path.exists(real_video_path):
         raise HTTPException(status_code=404, detail="Video not found")
-    return FileResponse(real_video_path, media_type="video/mp4")
+    return FileResponse(
+        real_video_path,
+        media_type="video/mp4",
+        filename=f"tool-video-{task_id}.mp4" if download else None,
+    )
 
 
 # ═══════════════════════════════════════════════════
