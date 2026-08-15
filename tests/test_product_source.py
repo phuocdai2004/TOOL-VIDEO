@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.product_source import (  # noqa: E402
     ProductSourceError,
+    _parse_shopee_reader_markdown,
     fetch_product_source,
     parse_product_html,
     validate_product_url,
@@ -21,6 +22,24 @@ from models.task import ProductVideoTask, TaskType, parse_task_state  # noqa: E4
 
 
 class ProductSourceParsingTests(unittest.TestCase):
+    def test_reads_shopee_reader_fallback(self) -> None:
+        source = _parse_shopee_reader_markdown(
+            """
+            # Loa Bluetooth GOOJODOQ 6000mAh
+            ![thumbnail](https://down-vn.img.susercontent.com/file/demo_tn)
+            ![main](https://down-vn.img.susercontent.com/file/sg-11134201-demo123)
+            ## Product Specifications
+            """,
+            "https://shopee.vn/product/10/20",
+        )
+
+        self.assertEqual(source.title, "Loa Bluetooth GOOJODOQ 6000mAh")
+        self.assertEqual(
+            source.image_url,
+            "https://down-vn.img.susercontent.com/file/sg-11134201-demo123",
+        )
+        self.assertEqual(source.site_name, "Shopee")
+
     def test_prefers_product_json_ld(self) -> None:
         source = parse_product_html(
             """
@@ -97,6 +116,33 @@ class ProductUrlSafetyTests(unittest.TestCase):
 
 
 class ProductSourceFetchTests(unittest.TestCase):
+    @patch("core.product_source.validate_product_url")
+    @patch("core.product_source._request_public_url")
+    def test_shopee_403_uses_reader_fallback(self, request_public_url, validate_url) -> None:
+        url = "https://shopee.vn/product/123/456"
+        validate_url.side_effect = lambda value: value
+        blocked = ProductSourceError("Trang sản phẩm trả về lỗi HTTP 403")
+        blocked.source_url = url
+
+        response = requests.Response()
+        response.status_code = 200
+        response.url = f"https://r.jina.ai/{url}"
+        response.encoding = "utf-8"
+        response.headers["Content-Type"] = "text/plain; charset=utf-8"
+        response._content = b"""
+            # Loa Bluetooth
+            ![main](https://down-vn.img.susercontent.com/file/sg-11134201-demo)
+        """
+        response.iter_content = lambda chunk_size: [response._content]
+        response.close = lambda: None
+        request_public_url.side_effect = [blocked, response]
+
+        source = fetch_product_source(url)
+
+        self.assertEqual(source.title, "Loa Bluetooth")
+        self.assertIn("susercontent.com", source.image_url)
+        self.assertEqual(request_public_url.call_count, 2)
+
     @patch("core.product_source.validate_product_url")
     @patch("core.product_source._request_public_url")
     def test_shopee_uses_public_preview_user_agent(self, request_public_url, validate_url) -> None:

@@ -26,6 +26,7 @@ DEFAULT_USER_AGENT = (
 SHOPEE_PREVIEW_USER_AGENT = (
     "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
 )
+SHOPEE_READER_BASE_URL = "https://r.jina.ai/"
 
 
 class ProductSourceError(ValueError):
@@ -187,6 +188,59 @@ def parse_product_html(page_html: str, base_url: str) -> ProductSource:
     )
 
 
+def _parse_shopee_reader_markdown(markdown: str, source_url: str) -> ProductSource:
+    """Extract Shopee product metadata from the reader fallback response."""
+    headings = re.findall(
+        r"^[ \t]*#[ \t]+(.+?)[ \t]*$", markdown, flags=re.MULTILINE
+    )
+    title = next(
+        (heading for heading in headings if heading.strip().lower() != "shopee"),
+        "",
+    )
+
+    image_urls = re.findall(
+        r"!\[[^\]]*\]\((https?://[^)\s]+)", markdown, flags=re.IGNORECASE
+    )
+    product_images = []
+    for image_url in image_urls:
+        parsed_image = urlparse(image_url)
+        hostname = (parsed_image.hostname or "").lower()
+        path = parsed_image.path.lower()
+        if not hostname.endswith("susercontent.com"):
+            continue
+        if path.endswith(("_tn", "_cover")) or path.endswith(".svg"):
+            continue
+        product_images.append(image_url)
+
+    preferred_images = [
+        image_url for image_url in product_images
+        if "-11134201-" in urlparse(image_url).path
+    ]
+    image_url = (preferred_images or product_images or [""])[0]
+    return ProductSource(
+        source_url=source_url,
+        title=_clean_text(title, 300),
+        image_url=image_url,
+        site_name="Shopee",
+    )
+
+
+def _fetch_shopee_reader(source_url: str) -> ProductSource:
+    """Read a public Shopee page when Shopee blocks the server with HTTP 403."""
+    reader_url = f"{SHOPEE_READER_BASE_URL}{source_url}"
+    response = _request_public_url(
+        reader_url,
+        "text/plain,text/markdown;q=0.9,*/*;q=0.5",
+        user_agent=DEFAULT_USER_AGENT,
+    )
+    raw = _read_limited(response, MAX_PRODUCT_HTML_BYTES)
+    markdown = raw.decode("utf-8", errors="replace")
+    source = _parse_shopee_reader_markdown(markdown, source_url)
+    if not source.image_url:
+        raise ProductSourceError("Shopee không cung cấp ảnh sản phẩm có thể đọc")
+    return source
+
+
 def validate_product_url(url: str) -> str:
     """Validate that a URL targets a public HTTP(S) host."""
     raw_value = str(url or "").strip()
@@ -260,7 +314,11 @@ def _request_public_url(
             response.raise_for_status()
         except requests.HTTPError as exc:
             response.close()
-            raise ProductSourceError(f"Trang sản phẩm trả về lỗi HTTP {exc.response.status_code}") from exc
+            error = ProductSourceError(
+                f"Trang sản phẩm trả về lỗi HTTP {exc.response.status_code}"
+            )
+            error.source_url = current_url
+            raise error from exc
         response.url = current_url
         return response
 
@@ -296,11 +354,20 @@ def fetch_product_source(url: str) -> ProductSource:
         if hostname == "shopee.vn" or hostname.endswith(".shopee.vn")
         else DEFAULT_USER_AGENT
     )
-    response = _request_public_url(
-        normalized_url,
-        "text/html,application/xhtml+xml,image/avif,image/webp,image/*;q=0.8,*/*;q=0.5",
-        user_agent=user_agent,
-    )
+    try:
+        response = _request_public_url(
+            normalized_url,
+            "text/html,application/xhtml+xml,image/avif,image/webp,image/*;q=0.8,*/*;q=0.5",
+            user_agent=user_agent,
+        )
+    except ProductSourceError as exc:
+        if (
+            (hostname == "shopee.vn" or hostname.endswith(".shopee.vn"))
+            and "HTTP 403" in str(exc)
+        ):
+            fallback_url = getattr(exc, "source_url", normalized_url)
+            return _fetch_shopee_reader(fallback_url)
+        raise
     content_type = response.headers.get("Content-Type", "").split(";", 1)[0].lower()
     final_url = response.url
 
