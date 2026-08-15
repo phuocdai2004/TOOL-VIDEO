@@ -67,6 +67,22 @@ class ProductSourceParsingTests(unittest.TestCase):
 
 class ProductUrlSafetyTests(unittest.TestCase):
     @patch("core.product_source.socket.getaddrinfo")
+    def test_extracts_shopee_url_from_mobile_share_text(self, getaddrinfo) -> None:
+        getaddrinfo.return_value = [
+            (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("8.8.8.8", 443)),
+        ]
+
+        normalized = validate_product_url(
+            "Mời bạn xem sản phẩm này trên Shopee! "
+            "https://s.shopee.vn/8AJexample?share_channel_code=1"
+        )
+
+        self.assertEqual(
+            normalized,
+            "https://s.shopee.vn/8AJexample?share_channel_code=1",
+        )
+
+    @patch("core.product_source.socket.getaddrinfo")
     def test_rejects_localhost_address(self, getaddrinfo) -> None:
         getaddrinfo.return_value = [
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 80)),

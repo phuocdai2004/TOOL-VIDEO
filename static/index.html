@@ -2711,7 +2711,10 @@
         <div class="mb-4">
           <label class="block text-sm text-gray-400 mb-1.5" data-i18n="productLink">Link sản phẩm</label>
           <div class="flex gap-2 product-link-row">
-            <input id="pr_url" type="url" oninput="handleProductUrlInput()" data-i18n-placeholder="productLinkPlaceholder" placeholder="https://shopee.vn/..." class="flex-1 glass-input rounded-lg px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600">
+            <input id="pr_url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" oninput="handleProductUrlInput()" onkeydown="if(event.key === 'Enter'){event.preventDefault(); inspectProductLink();}" data-i18n-placeholder="productLinkPlaceholder" placeholder="https://www.tiktok.com/..." class="flex-1 glass-input rounded-lg px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600">
+            <button id="pr_paste_link" type="button" onclick="pasteProductLink()" class="px-3 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition whitespace-nowrap" data-i18n-title="productPasteLink" title="Dán link sản phẩm">
+              <i data-lucide="clipboard-paste" class="inline-block w-4 h-4 mr-1.5"></i><span data-i18n="productPasteLink">Dán link</span>
+            </button>
             <button id="pr_inspect" type="button" onclick="inspectProductLink()" class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition whitespace-nowrap">
               <i data-lucide="scan-search" class="inline-block w-4 h-4 mr-1.5"></i><span data-i18n="productInspect">Lấy ảnh từ link</span>
             </button>
@@ -3407,7 +3410,7 @@ const T = {
     geminiConfigTitle: 'Gemini 商品分析', geminiKeyPlaceholder: 'Gemini API Key', geminiSave: '保存', geminiClear: '删除 Gemini API Key',
     geminiReady: '已就绪', geminiMissing: '未配置', geminiEnv: '环境变量已配置', geminiSaved: 'Gemini 配置已保存', geminiCleared: 'Gemini 配置已删除',
     geminiKeyRequired: '请输入 Gemini API Key', geminiRequired: '请先配置 Gemini API Key', geminiSaveFailed: '保存 Gemini 配置失败', geminiClearFailed: '删除 Gemini 配置失败', geminiClearConfirm: '删除已保存的 Gemini API Key？',
-    productLink: '商品链接', productLinkPlaceholder: 'https://example.com/product', productInspect: '从链接获取图片',
+    productLink: '商品链接', productLinkPlaceholder: 'https://www.tiktok.com/...', productPasteLink: '粘贴链接', productLinkPasted: '已粘贴商品链接', productPasteLinkManual: '请长按输入框并选择粘贴', productInspect: '从链接获取图片',
     orUploadImage: '或直接上传图片', productImage: '商品图片', productImageHint: 'JPG、PNG、WEBP 或 AVIF，最大 12 MB',
     productContent: '营销内容', productName: '商品名称', productNamePlaceholder: '留空则由 AI 从链接识别',
     productAudience: '目标客户', productDetails: '卖点、价格或优惠', productDetailsPlaceholder: '可选。只填写真实信息，避免 AI 编造。',
@@ -3569,7 +3572,7 @@ const T = {
     geminiConfigTitle: 'Gemini phân tích sản phẩm', geminiKeyPlaceholder: 'Gemini API Key', geminiSave: 'Lưu', geminiClear: 'Xóa Gemini API Key',
     geminiReady: 'Đã sẵn sàng', geminiMissing: 'Chưa cấu hình', geminiEnv: 'Đã cấu hình bằng biến môi trường', geminiSaved: 'Đã lưu cấu hình Gemini', geminiCleared: 'Đã xóa cấu hình Gemini',
     geminiKeyRequired: 'Hãy nhập Gemini API Key', geminiRequired: 'Hãy cấu hình Gemini API Key trước', geminiSaveFailed: 'Không lưu được cấu hình Gemini', geminiClearFailed: 'Không xóa được cấu hình Gemini', geminiClearConfirm: 'Xóa Gemini API Key đã lưu?',
-    productLink: 'Link sản phẩm', productLinkPlaceholder: 'https://shopee.vn/...', productInspect: 'Lấy ảnh từ link',
+    productLink: 'Link sản phẩm', productLinkPlaceholder: 'https://www.tiktok.com/...', productPasteLink: 'Dán link', productLinkPasted: 'Đã dán link sản phẩm', productPasteLinkManual: 'Hãy nhấn giữ ô link rồi chọn Dán', productInspect: 'Lấy ảnh từ link',
     orUploadImage: 'hoặc tải ảnh trực tiếp', productImage: 'Ảnh sản phẩm', productImageHint: 'JPG, PNG, WEBP hoặc AVIF · tối đa 12 MB',
     productContent: 'Nội dung bán hàng', productName: 'Tên sản phẩm', productNamePlaceholder: 'AI tự lấy từ link nếu để trống',
     productAudience: 'Khách hàng mục tiêu', productDetails: 'Điểm nổi bật, giá hoặc ưu đãi', productDetailsPlaceholder: 'Tùy chọn. Chỉ nhập thông tin đúng để AI không tự bịa.',
@@ -3709,7 +3712,7 @@ const T = {
     geminiConfigTitle: 'Gemini product analysis', geminiKeyPlaceholder: 'Gemini API Key', geminiSave: 'Save', geminiClear: 'Delete Gemini API Key',
     geminiReady: 'Ready', geminiMissing: 'Not configured', geminiEnv: 'Configured by environment', geminiSaved: 'Gemini configuration saved', geminiCleared: 'Gemini configuration deleted',
     geminiKeyRequired: 'Enter a Gemini API Key', geminiRequired: 'Configure a Gemini API Key first', geminiSaveFailed: 'Could not save Gemini configuration', geminiClearFailed: 'Could not delete Gemini configuration', geminiClearConfirm: 'Delete the saved Gemini API Key?',
-    productLink: 'Product Link', productLinkPlaceholder: 'https://example.com/product', productInspect: 'Fetch image from link',
+    productLink: 'Product Link', productLinkPlaceholder: 'https://www.tiktok.com/...', productPasteLink: 'Paste link', productLinkPasted: 'Product link pasted', productPasteLinkManual: 'Press and hold the link field, then choose Paste', productInspect: 'Fetch image from link',
     orUploadImage: 'or upload an image', productImage: 'Product Image', productImageHint: 'JPG, PNG, WEBP, or AVIF · max 12 MB',
     productContent: 'Marketing Content', productName: 'Product Name', productNamePlaceholder: 'AI detects it from the link when left blank',
     productAudience: 'Target Audience', productDetails: 'Highlights, Price, or Offer', productDetailsPlaceholder: 'Optional. Enter verified details only so AI does not invent claims.',
@@ -6540,6 +6543,41 @@ function setProductImageFile(file) {
   return !!input.files[0];
 }
 
+function extractProductUrl(text) {
+  const value = String(text || '').trim();
+  const match = value.match(/https?:\/\/[^\s<>"']+/i);
+  return (match ? match[0] : value).replace(/[),.;!?]+$/, '');
+}
+
+function setProductUrlValue(value) {
+  const input = document.getElementById('pr_url');
+  const url = extractProductUrl(value);
+  if (!input || !url) return false;
+  input.value = url;
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  input.focus({ preventScroll: true });
+  return true;
+}
+
+async function pasteProductLink() {
+  const input = document.getElementById('pr_url');
+  input?.focus({ preventScroll: true });
+  if (!navigator.clipboard || typeof navigator.clipboard.readText !== 'function') {
+    return showToast(t('productPasteLinkManual'), 4000);
+  }
+  try {
+    const clipboardText = await navigator.clipboard.readText();
+    if (!setProductUrlValue(clipboardText)) {
+      return showToast(t('productPasteLinkManual'), 4000);
+    }
+    showToast(t('productLinkPasted'), 3000);
+  } catch (error) {
+    console.warn('[Product] Clipboard text unavailable:', error.message);
+    input?.focus();
+    showToast(t('productPasteLinkManual'), 4000);
+  }
+}
+
 async function pasteProductImage() {
   if (!navigator.clipboard || typeof navigator.clipboard.read !== 'function') {
     return alert(t('productPasteHint'));
@@ -6565,6 +6603,14 @@ async function pasteProductImage() {
 document.addEventListener('paste', event => {
   const productForm = document.getElementById('form-product');
   if (!productForm || productForm.classList.contains('hidden')) return;
+  if (event.target?.id === 'pr_url') {
+    const pastedText = event.clipboardData?.getData('text/plain') || '';
+    if (extractProductUrl(pastedText).startsWith('http') && setProductUrlValue(pastedText)) {
+      event.preventDefault();
+      showToast(t('productLinkPasted'), 3000);
+    }
+    return;
+  }
   const imageFile = [...(event.clipboardData?.files || [])].find(file => file.type.startsWith('image/'));
   if (!imageFile) return;
   event.preventDefault();

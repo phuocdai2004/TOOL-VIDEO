@@ -189,9 +189,16 @@ def parse_product_html(page_html: str, base_url: str) -> ProductSource:
 
 def validate_product_url(url: str) -> str:
     """Validate that a URL targets a public HTTP(S) host."""
-    normalized = str(url or "").strip()
-    if not normalized or len(normalized) > 8000:
+    raw_value = str(url or "").strip()
+    if not raw_value or len(raw_value) > 8000:
         raise ProductSourceError("Link sản phẩm không hợp lệ")
+
+    # Mobile shopping apps often copy a full share message instead of a bare
+    # URL. Accept that text and extract the first public HTTP(S) link.
+    url_match = re.search(r"https?://[^\s<>\"']+", raw_value, flags=re.IGNORECASE)
+    normalized = (url_match.group(0) if url_match else raw_value).rstrip(
+        "),.;!?]}>"
+    )
 
     parsed = urlparse(normalized)
     if parsed.scheme not in ("http", "https") or not parsed.hostname:
